@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>DeimosSked · App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bg: #f5f7f9;
+      --card: #ffffff;
+      --text: #16181d;
+      --muted: #6f7380;
+      --accent: #7ee3c3;
+      --accent-strong: #0f766e;
+      --border: rgba(148, 163, 184, 0.45);
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.16);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #05060a;
+        --card: #11141b;
+        --text: #f7f8fc;
+        --muted: #9ca3b5;
+        --border: rgba(148, 163, 184, 0.6);
+        --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.7);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+        "SF Pro Text", sans-serif;
+      background: radial-gradient(circle at top, #e6fbf4 0, var(--bg) 40%);
+      color: var(--text);
+      padding: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app-shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .top-title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .top-title h1 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+    }
+
+    .top-sub {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 0.78rem;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(10px);
+      color: var(--muted);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .pill {
+        background: rgba(15, 23, 42, 0.85);
+      }
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.2fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 14px 16px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-main-title {
+      font-size: 0.98rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      background: var(--accent);
+      color: #021310;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 7px 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 6px 18px rgba(15, 118, 110, 0.25);
+      transition: transform 120ms ease, box-shadow 120ms ease,
+        filter 120ms ease;
+    }
+
+    .btn:active {
+      transform: translateY(1px) scale(0.98);
+      box-shadow: 0 3px 12px rgba(15, 118, 110, 0.3);
+      filter: brightness(0.97);
+    }
+
+    .btn-ghost {
+      border-radius: 999px;
+      border: 1px dashed rgba(148, 163, 184, 0.55);
+      background: transparent;
+      color: var(--muted);
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      cursor: pointer;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 6px;
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 720px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: block;
+      margin-top: 4px;
+      margin-bottom: 2px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 7px 10px;
+      font-size: 0.85rem;
+      background: rgba(255, 255, 255, 0.88);
+      color: var(--text);
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      input,
+      select,
+      textarea {
+        background: #050816;
+        border-color: rgba(148, 163, 184, 0.6);
+      }
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    .schedule-wrapper {
+      overflow-x: auto;
+      margin-top: 6px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 640px;
+      font-size: 0.8rem;
+    }
+
+    th,
+    td {
+      padding: 7px 6px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    td:first-child,
+    th:first-child {
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    td.slot {
+      cursor: pointer;
+      border-radius: 10px;
+      transition: background 120ms ease, transform 80ms ease;
+      position: relative;
+    }
+
+    .slot-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: flex-start;
+      padding: 3px 8px;
+    }
+
+    .subject {
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .subject.empty {
+      opacity: 0.35;
+      font-weight: 400;
+    }
+
+    .slot-meta {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    td.slot:hover {
+      background: rgba(126, 227, 195, 0.08);
+      transform: translateY(-1px);
+    }
+
+    td.slot-today::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: 10px;
+      border: 1px solid rgba(126, 227, 195, 0.9);
+      pointer-events: none;
+    }
+
+    /* Popup editor */
+    .popup-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .popup {
+      width: 100%;
+      max-width: 360px;
+      background: var(--card);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      padding: 16px 16px 14px;
+      animation: popupIn 140ms ease-out;
+    }
+
+    @keyframes popupIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .popup-title {
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .popup-close {
+      border: none;
+      background: transparent;
+      font-size: 1rem;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    .popup-actions {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .popup-secondary {
+      border-radius: 999px;
+      border: 1px dashed rgba(148, 163, 184, 0.7);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.78rem;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+
+    /* Notes */
+    .notes-list {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+
+    .note-item {
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(255, 255, 255, 0.92);
+      padding: 8px 9px;
+      font-size: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .note-item {
+        background: #050816;
+        border-color: rgba(148, 163, 184, 0.7);
+      }
+    }
+
+    .note-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .note-title {
+      font-weight: 500;
+    }
+
+    .note-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      font-size: 0.72rem;
+    }
+
+    .note-tag {
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(126, 227, 195, 0.2);
+      color: var(--accent-strong);
+    }
+
+    .note-meta {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .note-delete {
+      border-radius: 999px;
+      border: none;
+      padding: 3px 7px;
+      font-size: 0.72rem;
+      background: rgba(239, 68, 68, 0.12);
+      color: #b91c1c;
+      cursor: pointer;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .note-tag {
+        background: rgba(15, 118, 110, 0.6);
+        color: #e0fff7;
+      }
+      .note-delete {
+        background: rgba(239, 68, 68, 0.2);
+        color: #fecaca;
+      }
+    }
+
+    .note-empty {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* Countdown box */
+    .count-box {
+      border-radius: 18px;
+      padding: 10px 12px;
+      background: rgba(15, 23, 42, 0.02);
+      border: 1px dashed rgba(148, 163, 184, 0.5);
+      font-size: 0.8rem;
+      margin-top: 4px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .count-box {
+        background: rgba(15, 23, 42, 0.8);
+      }
+    }
+
+    .count-main {
+      font-weight: 500;
+    }
+
+    .footer-bar {
+      margin-top: 4px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Tutorial overlay */
+    .tutorial-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .tutorial-box {
+      max-width: 360px;
+      background: var(--card);
+      border-radius: 20px;
+      padding: 16px 16px 14px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .tutorial-box h2 {
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+    }
+
+    .tutorial-box p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+      line-height: 1.45;
+    }
+
+    .tutorial-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+  </style>
+</head>
+<body>
+  <!-- Tutorial -->
+  <div class="tutorial-bg" id="tutorialBg">
+    <div class="tutorial-box">
+      <h2>Benvenuto su DeimosSked</h2>
+      <p>
+        1. Imposta classe, liceo e anno.<br />
+        2. Scegli ora di inizio, durata delle ore e intervalli.<br />
+        3. Clicca sulle celle per inserire materie e note.<br />
+        4. Aggiungi verifiche con data per avere i countdown.
+      </p>
+      <div class="tutorial-actions">
+        <button class="btn" id="tutorialOk">Ok, ci sono</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup editor slot -->
+  <div class="popup-bg" id="popupBg">
+    <div class="popup">
+      <div class="popup-header">
+        <div class="popup-title" id="popupTitle">Modifica ora</div>
+        <button class="popup-close" id="popupClose" aria-label="Chiudi">✕</button>
+      </div>
+      <label>Materia</label>
+      <input id="popupMateria" placeholder="Es: Matematica, Italiano..." />
+
+      <label>Note (opzionale)</label>
+      <input id="popupNote" placeholder="Es: verifica, interrogazione..." />
+
+      <div class="popup-actions">
+        <button class="popup-secondary" id="popupClear">Svuota ora</button>
+        <button class="btn" id="popupSave">Salva</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-shell">
+    <!-- Top bar -->
+    <header class="top-bar">
+      <div class="top-title">
+        <h1>DeimosSked</h1>
+        <div class="top-sub" id="classLabel">
+          Classe · Liceo · Anno scolastico
+        </div>
+      </div>
+      <div class="pill">
+        <span class="pill-dot"></span>
+        <span id="todayInfo">Oggi</span>
+      </div>
+    </header>
+
+    <!-- Settings row -->
+    <section class="grid">
+      <!-- Left: class & schedule settings -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Classe &amp; impostazioni</div>
+          <button class="btn-ghost" id="resetAll">Reset dati</button>
+        </div>
+
+        <div class="card-main-title">Dati classe</div>
+        <div class="form-row">
+          <div>
+            <label>Classe</label>
+            <input id="classeInput" placeholder="Es: 3A, 5B..." />
+          </div>
+          <div>
+            <label>Liceo / scuola</label>
+            <input
+              id="scuolaInput"
+              placeholder="Es: Liceo Scientifico, Classico..."
+            />
+          </div>
+          <div>
+            <label>Anno (es: 3° liceo)</label>
+            <input id="annoInput" placeholder="Es: 3° liceo" />
+          </div>
+        </div>
+
+        <div class="card-main-title" style="margin-top:8px;">
+          Orario giornaliero
+        </div>
+        <div class="form-row">
+          <div>
+            <label>Ora di inizio</label>
+            <input id="oraInizio" type="time" value="08:00" />
+          </div>
+          <div>
+            <label>Durata ora (minuti)</label>
+            <input id="durata" type="number" value="46" />
+          </div>
+          <div>
+            <label>Numero ore al giorno</label>
+            <input id="numOre" type="number" value="7" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label>Intervallo dopo (n° ora, 0 = nessuno)</label>
+            <input id="intervalloIndex" type="number" value="2" />
+          </div>
+          <div>
+            <label>Pausa pranzo dopo (0 = nessuna)</label>
+            <input id="pranzoIndex" type="number" value="0" />
+          </div>
+          <div style="display:flex;align-items:flex-end;">
+            <button class="btn" id="applySchedule">Applica orario</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: countdown & info -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Fine scuola &amp; info</div>
+          <span style="font-size:0.78rem;color:var(--muted);">
+            Set una volta, resta salvato.
+          </span>
+        </div>
+
+        <div class="card-main-title">Fine anno scolastico</div>
+        <label>Data fine scuola</label>
+        <input id="fineScuolaInput" type="date" />
+
+        <div class="count-box" id="fineScuolaBox" style="margin-top:8px;">
+          <div class="count-main" id="fineScuolaText">
+            Mancano — giorni alla fine della scuola.
+          </div>
+          <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">
+            Il conteggio passa automaticamente all’anno scolastico successivo
+            quando la data è superata.
+          </div>
+        </div>
+
+        <div class="card-main-title" style="margin-top:12px;">
+          Stato locale
+        </div>
+        <div class="count-box">
+          <div style="font-size:0.78rem;color:var(--muted);" id="storageInfo">
+            Dati salvati in locale.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Schedule + notes -->
+    <section class="grid">
+      <!-- Left: timetable -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Orario settimanale</div>
+          <button class="btn-ghost" id="clearSchedule">Svuota orario</button>
+        </div>
+        <div class="schedule-wrapper" id="scheduleWrapper"></div>
+      </div>
+
+      <!-- Right: notes -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Appunti / verifiche</div>
+          <span
+            id="notesCount"
+            style="font-size:0.8rem;color:var(--muted);"
+          ></span>
+        </div>
+
+        <div class="card-main-title">Nuovo appunto</div>
+        <div class="form-row">
+          <div>
+            <label>Materia / titolo</label>
+            <input id="notaTitolo" placeholder="Es: Verifica Matematica" />
+          </div>
+          <div>
+            <label>Giorno</label>
+            <select id="notaGiorno">
+              <option value="">---</option>
+              <option value="0">Lunedì</option>
+              <option value="1">Martedì</option>
+              <option value="2">Mercoledì</option>
+              <option value="3">Giovedì</option>
+              <option value="4">Venerdì</option>
+              <option value="5">Sabato</option>
+            </select>
+          </div>
+          <div>
+            <label>Data</label>
+            <input id="notaData" type="date" />
+          </div>
+        </div>
+        <label>Dettagli</label>
+        <textarea
+          id="notaDettagli"
+          placeholder="Capitoli, argomenti, cosa portare..."
+        ></textarea>
+        <div style="margin-top:6px;">
+          <button class="btn" id="addNota">Aggiungi appunto</button>
+        </div>
+
+        <div class="notes-list" id="notesList"></div>
+        <div class="note-empty" id="notesEmpty">
+          Nessun appunto ancora. Inizia aggiungendone uno sopra.
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer-bar">
+      <span>
+        DeimosSked · dati salvati in questo browser. Puoi aggiungerlo alla
+        Home su iPhone per usarlo come app.
+      </span>
+      <span id="footerTime"></span>
+    </footer>
+  </div>
+
+  <script>
+    // ======================
+    // Utility data/tempo
+    // ======================
+    function formatToday() {
+      const now = new Date();
+      const giorni = [
+        "Domenica",
+        "Lunedì",
+        "Martedì",
+        "Mercoledì",
+        "Giovedì",
+        "Venerdì",
+        "Sabato",
+      ];
+      const d = String(now.getDate()).padStart(2, "0");
+      const m = String(now.getMonth() + 1).padStart(2, "0");
+      const y = now.getFullYear();
+      return `${giorni[now.getDay()]} · ${d}/${m}/${y}`;
+    }
+
+    document.getElementById("todayInfo").textContent = formatToday();
+
+    function updateFooterTime() {
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, "0");
+      const mm = String(now.getMinutes()).padStart(2, "0");
+      document.getElementById(
+        "footerTime"
+      ).textContent = `Ultimo aggiornamento: ${hh}:${mm}`;
+    }
+    updateFooterTime();
+
+    // ======================
+    // LocalStorage keys
+    // ======================
+    const KEY_CLASS = "deimosked_classinfo_v1";
+    const KEY_SCHEDULE = "deimosked_schedule_v1";
+    const KEY_SETTINGS = "deimosked_settings_v1";
+    const KEY_NOTES = "deimosked_notes_v1";
+    const KEY_TUTORIAL = "deimosked_tutorial_done_v1";
+
+    // ======================
+    // Stato in memoria
+    // ======================
+    let scheduleData = {};
+    let notesData = [];
+    let settings = {
+      start: "08:00",
+      durata: 46,
+      numOre: 7,
+      intervalloIndex: 2,
+      pranzoIndex: 0,
+      fineScuola: null,
+    };
+    let classInfo = {
+      classe: "",
+      scuola: "",
+      anno: "",
+    };
+
+    // ======================
+    // Tutorial
+    // ======================
+    const tutorialBg = document.getElementById("tutorialBg");
+    const tutorialOk = document.getElementById("tutorialOk");
+    if (!localStorage.getItem(KEY_TUTORIAL)) {
+      tutorialBg.style.display = "flex";
+    }
+    tutorialOk.addEventListener("click", () => {
+      tutorialBg.style.display = "none";
+      localStorage.setItem(KEY_TUTORIAL, "1");
+    });
+
+    // ======================
+    // Caricamento dati
+    // ======================
+    function loadData() {
+      try {
+        const s = localStorage.getItem(KEY_SCHEDULE);
+        if (s) scheduleData = JSON.parse(s);
+      } catch {
+        scheduleData = {};
+      }
+      try {
+        const n = localStorage.getItem(KEY_NOTES);
+        if (n) notesData = JSON.parse(n);
+      } catch {
+        notesData = [];
+      }
+      try {
+        const st = localStorage.getItem(KEY_SETTINGS);
+        if (st) settings = { ...settings, ...JSON.parse(st) };
+      } catch {
+        /* ignore */
+      }
+      try {
+        const ci = localStorage.getItem(KEY_CLASS);
+        if (ci) classInfo = { ...classInfo, ...JSON.parse(ci) };
+      } catch {
+        /* ignore */
+      }
+    }
+
+    loadData();
+
+    // ======================
+    // Aggiorna UI con dati
+    // ======================
+    const classeInput = document.getElementById("classeInput");
+    const scuolaInput = document.getElementById("scuolaInput");
+    const annoInput = document.getElementById("annoInput");
+    const classLabel = document.getElementById("classLabel");
+
+    function syncClassUI() {
+      classeInput.value = classInfo.classe || "";
+      scuolaInput.value = classInfo.scuola || "";
+      annoInput.value = classInfo.anno || "";
+      const c = classInfo.classe || "Classe";
+      const s = classInfo.scuola || "Scuola";
+      const a = classInfo.anno || "Anno scolastico";
+      classLabel.textContent = `${c} · ${s} · ${a}`;
+    }
+
+    syncClassUI();
+
+    const oraInizioEl = document.getElementById("oraInizio");
+    const durataEl = document.getElementById("durata");
+    const numOreEl = document.getElementById("numOre");
+    const intervalloIndexEl = document.getElementById("intervalloIndex");
+    const pranzoIndexEl = document.getElementById("pranzoIndex");
+    const fineScuolaInput = document.getElementById("fineScuolaInput");
+
+    function syncSettingsUI() {
+      oraInizioEl.value = settings.start || "08:00";
+      durataEl.value = settings.durata;
+      numOreEl.value = settings.numOre;
+      intervalloIndexEl.value = settings.intervalloIndex;
+      pranzoIndexEl.value = settings.pranzoIndex;
+      if (settings.fineScuola) {
+        fineScuolaInput.value = settings.fineScuola;
+      } else {
+        // default: 10 giugno anno corrente
+        const now = new Date();
+        const year = now.getFullYear();
+        fineScuolaInput.value = `${year}-06-10`;
+        settings.fineScuola = fineScuolaInput.value;
+      }
+    }
+
+    syncSettingsUI();
+
+    // ======================
+    // Salvataggi
+    // ======================
+    function saveClass() {
+      classInfo = {
+        classe: classeInput.value.trim(),
+        scuola: scuolaInput.value.trim(),
+        anno: annoInput.value.trim(),
+      };
+      localStorage.setItem(KEY_CLASS, JSON.stringify(classInfo));
+      syncClassUI();
+      updateFooterTime();
+    }
+
+    classeInput.addEventListener("change", saveClass);
+    scuolaInput.addEventListener("change", saveClass);
+    annoInput.addEventListener("change", saveClass);
+
+    function saveSettings() {
+      settings = {
+        start: oraInizioEl.value || "08:00",
+        durata: parseInt(durataEl.value || "46", 10),
+        numOre: parseInt(numOreEl.value || "7", 10),
+        intervalloIndex: parseInt(intervalloIndexEl.value || "0", 10),
+        pranzoIndex: parseInt(pranzoIndexEl.value || "0", 10),
+        fineScuola: fineScuolaInput.value || settings.fineScuola,
+      };
+      localStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
+      updateStorageInfo();
+      updateFooterTime();
+    }
+
+    document
+      .getElementById("applySchedule")
+      .addEventListener("click", () => {
+        saveSettings();
+        buildScheduleTable();
+      });
+
+    fineScuolaInput.addEventListener("change", () => {
+      saveSettings();
+      updateFineScuolaCountdown();
+    });
+
+    // ======================
+    // Storage info
+    // ======================
+    function updateStorageInfo() {
+      const s = (localStorage.getItem(KEY_SCHEDULE) || "").length;
+      const n = (localStorage.getItem(KEY_NOTES) || "").length;
+      const st = (localStorage.getItem(KEY_SETTINGS) || "").length;
+      const c = (localStorage.getItem(KEY_CLASS) || "").length;
+      const total = s + n + st + c;
+      document.getElementById(
+        "storageInfo"
+      ).textContent = `Circa ${total} byte di dati salvati in localStorage.`;
+    }
+
+    updateStorageInfo();
+
+    // ======================
+    // Orario settimanale
+    // ======================
+    const DAYS = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+    const scheduleWrapper = document.getElementById("scheduleWrapper");
+
+    function buildScheduleTable() {
+      const rows = settings.numOre || 7;
+      const start = settings.start || "08:00";
+      const durata = settings.durata || 46;
+      const intervalloIndex = settings.intervalloIndex || 0;
+      const pranzoIndex = settings.pranzoIndex || 0;
+
+      let html = `<table><thead><tr><th>Ora</th>`;
+      DAYS.forEach((d) => {
+        html += `<th>${d}</th>`;
+      });
+      html += `</tr></thead><tbody>`;
+
+      let t = new Date(`1970-01-01T${start}:00`);
+      let intervalsMap = {};
+
+      for (let i = 1; i <= rows; i++) {
+        const startTime = t.toTimeString().slice(0, 5);
+        t.setMinutes(t.getMinutes() + durata);
+        const endTime = t.toTimeString().slice(0, 5);
+        const label = `${startTime}–${endTime}`;
+        intervalsMap[i] = label;
+
+        if (i === intervalloIndex || i === pranzoIndex) {
+          t.setMinutes(t.getMinutes() + 10);
+        }
+      }
+
+      const now = new Date();
+      const todayIndex = now.getDay() - 1; // Lun=1 -> 0
+
+      for (let hour = 1; hour <= rows; hour++) {
+        html += `<tr><td>${intervalsMap[hour]}</td>`;
+        for (let d = 0; d < DAYS.length; d++) {
+          const key = `${d}-${hour - 1}`;
+          const cell = scheduleData[key] || { materia: "", note: "" };
+          const materia = cell.materia || "";
+          const note = cell.note || "";
+          const empty = !materia;
+          const todayClass = d === todayIndex ? "slot-today" : "";
+          html += `<td class="slot ${todayClass}" data-key="${key}">
+            <div class="slot-inner">
+              <div class="subject ${empty ? "empty" : ""}">
+                ${materia || "—"}
+              </div>
+              ${
+                note
+                  ? `<div class="slot-meta">${note}</div>`
+                  : `<div class="slot-meta" style="opacity:0.3;">Clicca per modificare</div>`
+              }
+            </div>
+          </td>`;
+        }
+        html += `</tr>`;
+      }
+
+      html += `</tbody></table>`;
+      scheduleWrapper.innerHTML = html;
+
+      // attach click handlers
+      document.querySelectorAll("td.slot").forEach((td) => {
+        td.addEventListener("click", () => {
+          const key = td.getAttribute("data-key");
+          openPopupForSlot(key);
+        });
+      });
+    }
+
+    buildScheduleTable();
+
+    document
+      .getElementById("clearSchedule")
+      .addEventListener("click", () => {
+        if (!confirm("Sicuro di voler svuotare tutto l’orario?")) return;
+        scheduleData = {};
+        localStorage.setItem(KEY_SCHEDULE, JSON.stringify(scheduleData));
+        buildScheduleTable();
+        updateStorageInfo();
+      });
+
+    // ======================
+    // Popup editor slot
+    // ======================
+    const popupBg = document.getElementById("popupBg");
+    const popupMateria = document.getElementById("popupMateria");
+    const popupNote = document.getElementById("popupNote");
+    const popupTitle = document.getElementById("popupTitle");
+    const popupSave = document.getElementById("popupSave");
+    const popupClear = document.getElementById("popupClear");
+    const popupClose = document.getElementById("popupClose");
+
+    let currentSlotKey = null;
+
+    function openPopupForSlot(key) {
+      currentSlotKey = key;
+      const val = scheduleData[key] || { materia: "", note: "" };
+      popupMateria.value = val.materia;
+      popupNote.value = val.note;
+      const [dayIndex, hourIndex] = key.split("-").map((x) => parseInt(x, 10));
+      popupTitle.textContent = `${DAYS[dayIndex]} · ora ${hourIndex + 1}`;
+      popupBg.style.display = "flex";
+    }
+
+    function closePopup() {
+      popupBg.style.display = "none";
+      currentSlotKey = null;
+    }
+
+    popupSave.addEventListener("click", () => {
+      if (!currentSlotKey) return;
+      scheduleData[currentSlotKey] = {
+        materia: popupMateria.value.trim(),
+        note: popupNote.value.trim(),
+      };
+      localStorage.setItem(KEY_SCHEDULE, JSON.stringify(scheduleData));
+      buildScheduleTable();
+      updateStorageInfo();
+      updateFooterTime();
+      closePopup();
+    });
+
+    popupClear.addEventListener("click", () => {
+      if (!currentSlotKey) return;
+      delete scheduleData[currentSlotKey];
+      localStorage.setItem(KEY_SCHEDULE, JSON.stringify(scheduleData));
+      buildScheduleTable();
+      updateStorageInfo();
+      updateFooterTime();
+      closePopup();
+    });
+
+    popupClose.addEventListener("click", closePopup);
+    popupBg.addEventListener("click", (e) => {
+      if (e.target === popupBg) closePopup();
+    });
+
+    // ======================
+    // Note / verifiche
+    // ======================
+    const notaTitolo = document.getElementById("notaTitolo");
+    const notaGiorno = document.getElementById("notaGiorno");
+    const notaData = document.getElementById("notaData");
+    const notaDettagli = document.getElementById("notaDettagli");
+    const notesList = document.getElementById("notesList");
+    const notesEmpty = document.getElementById("notesEmpty");
+    const notesCount = document.getElementById("notesCount");
+
+    function saveNotes() {
+      localStorage.setItem(KEY_NOTES, JSON.stringify(notesData));
+      updateStorageInfo();
+      updateFooterTime();
+    }
+
+    function renderNotes() {
+      notesList.innerHTML = "";
+      if (!notesData.length) {
+        notesEmpty.style.display = "block";
+        notesCount.textContent = "0 appunti";
+        return;
+      }
+      notesEmpty.style.display = "none";
+      notesCount.textContent = `${notesData.length} appunti`;
+
+      const sorted = [...notesData].sort((a, b) => {
+        if (a.data && b.data && a.data !== b.data) {
+          return a.data.localeCompare(b.data);
+        }
+        if (a.dayIndex !== b.dayIndex) return a.dayIndex - b.dayIndex;
+        return (a.createdAt || 0) - (b.createdAt || 0);
+      });
+
+      const now = new Date();
+
+      sorted.forEach((n, idx) => {
+        const item = document.createElement("div");
+        item.className = "note-item";
+
+        const top = document.createElement("div");
+        top.className = "note-top";
+
+        const title = document.createElement("div");
+        title.className = "note-title";
+        title.textContent = n.titolo || "Senza titolo";
+
+        const delBtn = document.createElement("button");
+        delBtn.className = "note-delete";
+        delBtn.textContent = "Elimina";
+        delBtn.addEventListener("click", () => {
+          notesData = notesData.filter((_, i) => i !== idx);
+          saveNotes();
+          renderNotes();
+        });
+
+        top.appendChild(title);
+        top.appendChild(delBtn);
+
+        const tags = document.createElement("div");
+        tags.className = "note-tags";
+
+        if (typeof n.dayIndex === "number") {
+          const t = document.createElement("span");
+          t.className = "note-tag";
+          t.textContent = DAYS[n.dayIndex];
+          tags.appendChild(t);
+        }
+
+        if (n.data) {
+          const t = document.createElement("span");
+          t.className = "note-tag";
+          t.textContent = n.data;
+          tags.appendChild(t);
+        }
+
+        const meta = document.createElement("div");
+        meta.className = "note-meta";
+        meta.textContent = n.dettagli || "";
+
+        const countdownDiv = document.createElement("div");
+        countdownDiv.className = "note-meta";
+        if (n.data) {
+          const d = new Date(n.data);
+          const diff = Math.ceil((d - now) / (1000 * 60 * 60 * 24));
+          if (!isNaN(diff)) {
+            if (diff > 0) {
+              countdownDiv.textContent = `Mancano ${diff} giorni.`;
+            } else if (diff === 0) {
+              countdownDiv.textContent = `È oggi.`;
+            } else {
+              countdownDiv.textContent = `Già passata.`;
+            }
+          }
+        }
+
+        item.appendChild(top);
+        if (tags.childElementCount) item.appendChild(tags);
+        if (meta.textContent) item.appendChild(meta);
+        if (countdownDiv.textContent) item.appendChild(countdownDiv);
+
+        notesList.appendChild(item);
+      });
+    }
+
+    renderNotes();
+
+    document.getElementById("addNota").addEventListener("click", () => {
+      const titolo = notaTitolo.value.trim();
+      const dettagli = notaDettagli.value.trim();
+      const giornoVal = notaGiorno.value;
+      const dataVal = notaData.value;
+
+      if (!titolo && !dettagli) return;
+
+      notesData.push({
+        titolo,
+        dettagli,
+        dayIndex: giornoVal === "" ? null : parseInt(giornoVal, 10),
+        data: dataVal || "",
+        createdAt: Date.now(),
+      });
+
+      notaTitolo.value = "";
+      notaDettagli.value = "";
+      notaGiorno.value = "";
+      notaData.value = "";
+
+      saveNotes();
+      renderNotes();
+    });
+
+    // ======================
+    // Fine scuola countdown
+    // ======================
+    function updateFineScuolaCountdown() {
+      const el = document.getElementById("fineScuolaText");
+      if (!settings.fineScuola) {
+        el.textContent = "Mancano — giorni alla fine della scuola.";
+        return;
+      }
+      const now = new Date();
+      let end = new Date(settings.fineScuola);
+      if (isNaN(end.getTime())) {
+        el.textContent = "Data non valida.";
+        return;
+      }
+      // se la data è già passata, considera l'anno successivo
+      if (end < now) {
+        end.setFullYear(end.getFullYear() + 1);
+      }
+      const diff = Math.ceil((end - now) / (1000 * 60 * 60 * 24));
+      el.innerHTML = `Mancano <strong>${diff}</strong> giorni alla fine della scuola.`;
+    }
+
+    updateFineScuolaCountdown();
+
+    // ======================
+    // Reset totale
+    // ======================
+    document.getElementById("resetAll").addEventListener("click", () => {
+      if (
+        !confirm(
+          "Vuoi davvero cancellare tutti i dati (orario, appunti, impostazioni)?"
+        )
+      )
+        return;
+      localStorage.removeItem(KEY_CLASS);
+      localStorage.removeItem(KEY_SCHEDULE);
+      localStorage.removeItem(KEY_SETTINGS);
+      localStorage.removeItem(KEY_NOTES);
+      scheduleData = {};
+      notesData = [];
+      settings = {
+        start: "08:00",
+        durata: 46,
+        numOre: 7,
+        intervalloIndex: 2,
+        pranzoIndex: 0,
+        fineScuola: null,
+      };
+      classInfo = { classe: "", scuola: "", anno: "" };
+      syncClassUI();
+      syncSettingsUI();
+      buildScheduleTable();
+      renderNotes();
+      updateStorageInfo();
+      updateFineScuolaCountdown();
+      updateFooterTime();
+    });
+  </script>
+</body>
+</html>
