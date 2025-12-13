@@ -837,7 +837,31 @@ async function loadUserData(uid) {
   buildScheduleTable();
 
   console.log("Dati cloud caricati");
+} 
+async function saveUserData(uid) {
+  if (!uid) return;
+
+  const ref = doc(db, "users", uid);
+
+  const dataToSave = {
+    scheduleData,
+    settings,
+    classInfo,
+    notesData,
+  };
+
+  try {
+    await setDoc(ref, dataToSave, { merge: true });
+    console.log("Dati cloud salvati");
+  } catch (err) {
+    console.error("Errore salvataggio cloud:", err);
+  }
 }
+
+function saveIfLoggedIn() {
+  if (!currentUser) return;
+  saveUserData(currentUser.uid);
+} 
     // ======================
     // Utility data/tempo
     // ======================
@@ -1001,6 +1025,7 @@ async function loadUserData(uid) {
       localStorage.setItem(KEY_CLASS, JSON.stringify(classInfo));
       syncClassUI();
       updateFooterTime();
+     saveIfLoggedIn();
     }
 
     classeInput.addEventListener("change", saveClass);
@@ -1019,6 +1044,7 @@ async function loadUserData(uid) {
       localStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
       updateStorageInfo();
       updateFooterTime();
+    saveIfLoggedIn();
     }
 
     document
@@ -1173,6 +1199,7 @@ async function loadUserData(uid) {
       buildScheduleTable();
       updateStorageInfo();
       updateFooterTime();
+      saveIfLoggedIn();
       closePopup();
     });
 
@@ -1183,6 +1210,7 @@ async function loadUserData(uid) {
       buildScheduleTable();
       updateStorageInfo();
       updateFooterTime();
+      saveIfLoggedIn();
       closePopup();
     });
 
@@ -1206,6 +1234,7 @@ async function loadUserData(uid) {
       localStorage.setItem(KEY_NOTES, JSON.stringify(notesData));
       updateStorageInfo();
       updateFooterTime();
+    saveIfLoggedIn();
     }
 
     function renderNotes() {
@@ -1381,6 +1410,7 @@ async function loadUserData(uid) {
       updateStorageInfo();
       updateFineScuolaCountdown();
       updateFooterTime();
+      saveIfLoggedIn(); 
     });
   // ===== LOGIN CON FIREBASE =====
 
@@ -1427,10 +1457,19 @@ logoutBtn.addEventListener("click", async () => {
 });
 
 // quando cambia lo stato (loggato/non loggato)
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   currentUser = user || null;
+
   if (currentUser) {
     loginStatusEl.textContent = `Loggato come ${currentUser.email}`;
+
+    try {
+      await loadUserData(currentUser.uid);
+      updateStorageInfo();
+      updateFooterTime();
+    } catch (err) {
+      console.error("Errore nel caricamento dati utente:", err);
+    }
   } else {
     loginStatusEl.textContent = "Non sei loggato";
   }
