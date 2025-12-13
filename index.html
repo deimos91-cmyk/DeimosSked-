@@ -795,7 +795,12 @@
     signInWithEmailAndPassword,
     signOut,
   } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-
+ import { 
+    getFirestore, 
+    doc, 
+    getDoc, 
+    setDoc 
+  } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
   const firebaseConfig = {
     apiKey: "AIzaSyDrpEyDbDEet_Mv6t7rmgKKiP_W-1Q3aDc",
     authDomain: "deimossked.firebaseapp.com",
@@ -808,6 +813,31 @@
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const db = getFirestore(app);
+
+async function loadUserData(uid) {
+  const ref = doc(db, "users", uid);
+  const snap = await getDoc(ref);
+
+  if (!snap.exists()) {
+    console.log("Utente nuovo: nessun dato salvato.");
+    return;
+  }
+
+  const data = snap.data();
+
+  scheduleData = data.scheduleData || {};
+  settings = data.settings || settings;
+  classInfo = data.classInfo || classInfo;
+  notesData = data.notesData || [];
+
+  syncClassUI();
+  syncSettingsUI();
+  renderNotes();
+  buildScheduleTable();
+
+  console.log("Dati cloud caricati");
+}
     // ======================
     // Utility data/tempo
     // ======================
