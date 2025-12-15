@@ -554,6 +554,58 @@
       color: var(--accent-strong);
     }
 
+    /* Settings modal */
+    .modal-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 60;
+      padding: 16px;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 640px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow-soft);
+      padding: 16px 16px 12px;
+      position: relative;
+      animation: popupIn 140ms ease-out;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .modal-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      border: none;
+      background: transparent;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
     .footer-bar {
       margin-top: 4px;
       font-size: 0.75rem;
@@ -680,118 +732,14 @@
 
     <!-- Settings row -->
     <section class="grid">
-      <!-- Left: class & schedule settings -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Classe &amp; impostazioni</div>
+      <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <div>
+          <div class="card-title">Orario • Impostazioni</div>
+          <div class="top-sub">Configura classe, orari e pause.</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <button class="btn" id="openSettingsModal">⚙️ Apri impostazioni</button>
           <button class="btn-ghost" id="resetAll">Reset dati</button>
-        </div>
-
-        <div class="card-main-title">Dati classe</div>
-        <div class="form-row">
-          <div>
-            <label>Classe</label>
-            <input id="classeInput" placeholder="Es: 3A, 5B..." />
-          </div>
-          <div>
-            <label>Liceo / scuola</label>
-            <input
-              id="scuolaInput"
-              placeholder="Es: Liceo Scientifico, Classico..."
-            />
-          </div>
-          <div>
-            <label>Anno (es: 3° liceo)</label>
-            <input id="annoInput" placeholder="Es: 3° liceo" />
-          </div>
-        </div>
-
-        <div class="card-main-title" style="margin-top:8px;">
-          Orario giornaliero
-        </div>
-        <div class="form-row">
-          <div>
-            <label>Ora di inizio</label>
-            <input id="oraInizio" type="time" value="08:00" />
-          </div>
-          <div>
-            <label>Durata ora (minuti)</label>
-            <input id="durata" type="number" value="46" />
-          </div>
-          <div>
-            <label>Numero ore al giorno</label>
-            <input id="numOre" type="number" value="7" />
-          </div>
-        </div>
-        <div class="card-main-title" style="margin-top:8px;">
-  Tema colore
-</div>
-<div class="form-row">
-  <div>
-    <label>Tema</label>
-    <select id="themeSelect">
-      <option value="mint">Mint</option>
-      <option value="sky">Sky</option>
-      <option value="lavender">Lavender</option>
-      <option value="sunset">Sunset</option>
-    </select>
-  </div>
-</div>
-
-        <div class="card-main-title" style="margin-top:8px;">Pause per giorno</div>
-        <div class="breaks-grid">
-          <div class="breaks-row breaks-head">
-            <span>Giorno</span>
-            <span>Intervallo dopo</span>
-            <span>Pausa pranzo dopo</span>
-            <span>Durata intervallo</span>
-            <span>Durata pranzo</span>
-          </div>
-          <div class="breaks-row">
-            <span>Lunedì</span>
-            <input class="break-intervallo" data-day="0" type="number" min="0" value="0" />
-            <input class="break-pranzo" data-day="0" type="number" min="0" value="0" />
-            <input class="break-intervallo-min" data-day="0" type="number" min="1" value="10" />
-            <input class="break-pranzo-min" data-day="0" type="number" min="1" value="60" />
-          </div>
-          <div class="breaks-row">
-            <span>Martedì</span>
-            <input class="break-intervallo" data-day="1" type="number" min="0" value="0" />
-            <input class="break-pranzo" data-day="1" type="number" min="0" value="0" />
-            <input class="break-intervallo-min" data-day="1" type="number" min="1" value="10" />
-            <input class="break-pranzo-min" data-day="1" type="number" min="1" value="60" />
-          </div>
-          <div class="breaks-row">
-            <span>Mercoledì</span>
-            <input class="break-intervallo" data-day="2" type="number" min="0" value="0" />
-            <input class="break-pranzo" data-day="2" type="number" min="0" value="0" />
-            <input class="break-intervallo-min" data-day="2" type="number" min="1" value="10" />
-            <input class="break-pranzo-min" data-day="2" type="number" min="1" value="60" />
-          </div>
-          <div class="breaks-row">
-            <span>Giovedì</span>
-            <input class="break-intervallo" data-day="3" type="number" min="0" value="0" />
-            <input class="break-pranzo" data-day="3" type="number" min="0" value="0" />
-            <input class="break-intervallo-min" data-day="3" type="number" min="1" value="10" />
-            <input class="break-pranzo-min" data-day="3" type="number" min="1" value="60" />
-          </div>
-          <div class="breaks-row">
-            <span>Venerdì</span>
-            <input class="break-intervallo" data-day="4" type="number" min="0" value="0" />
-            <input class="break-pranzo" data-day="4" type="number" min="0" value="0" />
-            <input class="break-intervallo-min" data-day="4" type="number" min="1" value="10" />
-            <input class="break-pranzo-min" data-day="4" type="number" min="1" value="60" />
-          </div>
-          <div class="breaks-row">
-            <span>Sabato</span>
-            <input class="break-intervallo" data-day="5" type="number" min="0" value="0" />
-            <input class="break-pranzo" data-day="5" type="number" min="0" value="0" />
-            <input class="break-intervallo-min" data-day="5" type="number" min="1" value="10" />
-            <input class="break-pranzo-min" data-day="5" type="number" min="1" value="60" />
-          </div>
-        </div>
-        <div style="display:flex;align-items:flex-end;justify-content:flex-end;margin-top:6px;">
-          <button class="btn" id="applySchedule">Applica orario</button>
         </div>
       </div>
 
@@ -920,6 +868,78 @@
     </footer>
   </div>
 
+  <!-- Settings modal -->
+  <div class="modal-bg" id="settingsModalBg">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <div class="modal-title">Impostazioni orario</div>
+        <button class="modal-close" id="settingsModalClose" aria-label="Chiudi">✕</button>
+      </div>
+
+      <div class="card-main-title">Dati classe</div>
+      <div class="form-row">
+        <div>
+          <label>Classe</label>
+          <input id="classeInputModal" placeholder="Es: 3A, 5B..." />
+        </div>
+        <div>
+          <label>Liceo / scuola</label>
+          <input id="scuolaInputModal" placeholder="Es: Liceo Scientifico, Classico..." />
+        </div>
+        <div>
+          <label>Anno (es: 3° liceo)</label>
+          <input id="annoInputModal" placeholder="Es: 3° liceo" />
+        </div>
+      </div>
+
+      <div class="card-main-title" style="margin-top:8px;">Orario giornaliero</div>
+      <div class="form-row">
+        <div>
+          <label>Ora di inizio</label>
+          <input id="oraInizioModal" type="time" />
+        </div>
+        <div>
+          <label>Durata ora (minuti)</label>
+          <input id="durataModal" type="number" min="20" />
+        </div>
+        <div>
+          <label>Numero ore al giorno</label>
+          <input id="numOreModal" type="number" min="1" max="12" />
+        </div>
+      </div>
+
+      <div class="card-main-title" style="margin-top:8px;">Tema colore</div>
+      <div class="form-row">
+        <div>
+          <label>Tema</label>
+          <select id="themeSelectModal">
+            <option value="mint">Mint</option>
+            <option value="sky">Sky</option>
+            <option value="lavender">Lavender</option>
+            <option value="sunset">Sunset</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card-main-title" style="margin-top:8px;">Pause per giorno</div>
+      <div class="breaks-grid" id="breaksGrid">
+        <div class="breaks-row breaks-head">
+          <span>Giorno</span>
+          <span>Intervallo da</span>
+          <span>Intervallo a</span>
+          <span>Pausa pranzo da</span>
+          <span>Pausa pranzo a</span>
+        </div>
+        <!-- righe generate da JS -->
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-ghost" id="settingsCancel">Annulla</button>
+        <button class="btn" id="settingsSave">Salva</button>
+      </div>
+    </div>
+  </div>
+
  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script type="module">
   // Import Firebase
@@ -967,7 +987,11 @@ async function loadUserData(uid) {
     settings = {
       ...settings,
       ...data.settings,
-      breaks: { ...settings.breaks, ...(data.settings.breaks || {}) },
+      dayBreaks: {
+        ...defaultDayBreaks(),
+        ...(data.settings.dayBreaks ||
+          migrateLegacyBreaks(data.settings, data.settings.breaks)),
+      },
     };
   }
   classInfo = data.classInfo || classInfo;
@@ -975,6 +999,7 @@ async function loadUserData(uid) {
 
   syncClassUI();
   syncSettingsUI();
+  populateSettingsModal();
   renderNotes();
   buildScheduleTable();
   applyTheme(settings.theme || "mint");
@@ -1038,6 +1063,25 @@ function saveIfLoggedIn() {
     }
     updateFooterTime();
 
+    // utility tempo
+    function parseTime(str) {
+      if (!str || typeof str !== "string") return null;
+      const [h, m] = str.split(":").map((x) => parseInt(x, 10));
+      if (Number.isNaN(h) || Number.isNaN(m)) return null;
+      return h * 60 + m;
+    }
+
+    function formatTime(min) {
+      if (min == null || Number.isNaN(min)) return "";
+      const h = Math.floor(min / 60) % 24;
+      const m = min % 60;
+      return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+    }
+
+    function overlaps(aStart, aEnd, bStart, bEnd) {
+      return aStart < bEnd && bStart < aEnd;
+    }
+
     // ======================
     // LocalStorage keys
     // ======================
@@ -1052,28 +1096,74 @@ function saveIfLoggedIn() {
     // ======================
     let scheduleData = {};
     let notesData = [];
+    const defaultDayBreaks = () => ({
+      0: { breakStart: "", breakEnd: "", lunchStart: "", lunchEnd: "" },
+      1: { breakStart: "", breakEnd: "", lunchStart: "", lunchEnd: "" },
+      2: { breakStart: "", breakEnd: "", lunchStart: "", lunchEnd: "" },
+      3: { breakStart: "", breakEnd: "", lunchStart: "", lunchEnd: "" },
+      4: { breakStart: "", breakEnd: "", lunchStart: "", lunchEnd: "" },
+      5: { breakStart: "", breakEnd: "", lunchStart: "", lunchEnd: "" },
+    });
+
+    function migrateLegacyBreaks(baseSettings, legacyBreaks) {
+      const result = defaultDayBreaks();
+      const startMin = parseTime(baseSettings.start || "08:00") || 0;
+      const durata = baseSettings.durata || 46;
+      const rows = baseSettings.numOre || 7;
+
+      for (let d = 0; d <= 5; d++) {
+        const legacy =
+          legacyBreaks?.[d] || {
+            intervalloAfter: baseSettings.intervalloIndex || 0,
+            pranzoAfter: baseSettings.pranzoIndex || 0,
+            intervalloMin: 10,
+            pranzoMin: 60,
+          };
+
+        let cursor = startMin;
+        let breakStart = "";
+        let breakEnd = "";
+        let lunchStart = "";
+        let lunchEnd = "";
+
+        for (let i = 1; i <= rows; i++) {
+          cursor += durata;
+          if (i === legacy.intervalloAfter && legacy.intervalloAfter > 0) {
+            breakStart = formatTime(cursor);
+            cursor += legacy.intervalloMin || 10;
+            breakEnd = formatTime(cursor);
+          }
+          if (i === legacy.pranzoAfter && legacy.pranzoAfter > 0) {
+            lunchStart = formatTime(cursor);
+            cursor += legacy.pranzoMin || 60;
+            lunchEnd = formatTime(cursor);
+          }
+        }
+
+        result[d] = {
+          breakStart,
+          breakEnd,
+          lunchStart,
+          lunchEnd,
+        };
+      }
+      return result;
+    }
+
     let settings = {
       start: "08:00",
       durata: 46,
       numOre: 7,
-      intervalloIndex: 2,
-      pranzoIndex: 0,
       fineScuola: null,
       theme: "mint",
-      breaks: {
-        0: { intervalloAfter: 2, pranzoAfter: 0, intervalloMin: 10, pranzoMin: 60 },
-        1: { intervalloAfter: 2, pranzoAfter: 0, intervalloMin: 10, pranzoMin: 60 },
-        2: { intervalloAfter: 2, pranzoAfter: 0, intervalloMin: 10, pranzoMin: 60 },
-        3: { intervalloAfter: 2, pranzoAfter: 0, intervalloMin: 10, pranzoMin: 60 },
-        4: { intervalloAfter: 2, pranzoAfter: 0, intervalloMin: 10, pranzoMin: 60 },
-        5: { intervalloAfter: 0, pranzoAfter: 0, intervalloMin: 10, pranzoMin: 60 },
-      },
+      dayBreaks: defaultDayBreaks(),
     };
     let classInfo = {
       classe: "",
       scuola: "",
       anno: "",
     };
+    const DAYS = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
     const THEME_CONFIGS = {
   mint: {
     accent: "#7ee3c3",
@@ -1138,7 +1228,10 @@ function applyTheme(themeName) {
           settings = {
             ...settings,
             ...parsed,
-            breaks: { ...settings.breaks, ...(parsed.breaks || {}) },
+            dayBreaks: {
+              ...defaultDayBreaks(),
+              ...(parsed.dayBreaks || migrateLegacyBreaks(parsed, parsed.breaks)),
+            },
           };
         }
       } catch {
@@ -1157,18 +1250,47 @@ function applyTheme(themeName) {
     // ======================
     // Aggiorna UI con dati
     // ======================
-    const classeInput = document.getElementById("classeInput");
-    const scuolaInput = document.getElementById("scuolaInput");
-    const annoInput = document.getElementById("annoInput");
     const classLabel = document.getElementById("classLabel");
     const lessonProgressText = document.getElementById("lessonProgressText");
     const lessonProgressMeta = document.getElementById("lessonProgressMeta");
     const lessonProgressBar = document.getElementById("lessonProgressBar");
-    const themeSelect = document.getElementById("themeSelect");
+    const fineScuolaInput = document.getElementById("fineScuolaInput");
+
+    // modal elements
+    const modalBg = document.getElementById("settingsModalBg");
+    const modalClose = document.getElementById("settingsModalClose");
+    const modalOpenBtn = document.getElementById("openSettingsModal");
+    const modalCancel = document.getElementById("settingsCancel");
+    const modalSave = document.getElementById("settingsSave");
+    const breaksGrid = document.getElementById("breaksGrid");
+
+    const classeInputModal = document.getElementById("classeInputModal");
+    const scuolaInputModal = document.getElementById("scuolaInputModal");
+    const annoInputModal = document.getElementById("annoInputModal");
+    const oraInizioModal = document.getElementById("oraInizioModal");
+    const durataModal = document.getElementById("durataModal");
+    const numOreModal = document.getElementById("numOreModal");
+    const themeSelectModal = document.getElementById("themeSelectModal");
+
+    function renderBreaksGrid() {
+      // remove old rows except header
+      breaksGrid.querySelectorAll(".breaks-row:not(.breaks-head)").forEach((row) =>
+        row.remove()
+      );
+      DAYS.forEach((day, idx) => {
+        const row = document.createElement("div");
+        row.className = "breaks-row";
+        row.innerHTML = `
+          <span>${day}</span>
+          <input class="break-start" data-day="${idx}" type="time" />
+          <input class="break-end" data-day="${idx}" type="time" />
+          <input class="lunch-start" data-day="${idx}" type="time" />
+          <input class="lunch-end" data-day="${idx}" type="time" />
+        `;
+        breaksGrid.appendChild(row);
+      });
+    }
     function syncClassUI() {
-      classeInput.value = classInfo.classe || "";
-      scuolaInput.value = classInfo.scuola || "";
-      annoInput.value = classInfo.anno || "";
       const c = classInfo.classe || "Classe";
       const s = classInfo.scuola || "Scuola";
       const a = classInfo.anno || "Anno scolastico";
@@ -1177,15 +1299,7 @@ function applyTheme(themeName) {
 
     syncClassUI();
 
-    const oraInizioEl = document.getElementById("oraInizio");
-    const durataEl = document.getElementById("durata");
-    const numOreEl = document.getElementById("numOre");
-    const fineScuolaInput = document.getElementById("fineScuolaInput");
-
     function syncSettingsUI() {
-      oraInizioEl.value = settings.start || "08:00";
-      durataEl.value = settings.durata;
-      numOreEl.value = settings.numOre;
       if (settings.fineScuola) {
         fineScuolaInput.value = settings.fineScuola;
       } else {
@@ -1195,118 +1309,156 @@ function applyTheme(themeName) {
         fineScuolaInput.value = `${year}-06-10`;
         settings.fineScuola = fineScuolaInput.value;
       } 
-      themeSelect.value = settings.theme || "mint";
-
-      document.querySelectorAll(".break-intervallo").forEach((el) => {
-        const day = el.dataset.day;
-        el.value = settings.breaks?.[day]?.intervalloAfter ?? 0;
-      });
-      document.querySelectorAll(".break-pranzo").forEach((el) => {
-        const day = el.dataset.day;
-        el.value = settings.breaks?.[day]?.pranzoAfter ?? 0;
-      });
-      document.querySelectorAll(".break-intervallo-min").forEach((el) => {
-        const day = el.dataset.day;
-        el.value = settings.breaks?.[day]?.intervalloMin ?? 10;
-      });
-      document.querySelectorAll(".break-pranzo-min").forEach((el) => {
-        const day = el.dataset.day;
-        el.value = settings.breaks?.[day]?.pranzoMin ?? 60;
-      });
 
     }
 
     syncSettingsUI();
+    renderBreaksGrid();
+    populateSettingsModal();
+
+    function populateSettingsModal() {
+      classeInputModal.value = classInfo.classe || "";
+      scuolaInputModal.value = classInfo.scuola || "";
+      annoInputModal.value = classInfo.anno || "";
+      oraInizioModal.value = settings.start || "08:00";
+      durataModal.value = settings.durata || 46;
+      numOreModal.value = settings.numOre || 7;
+      themeSelectModal.value = settings.theme || "mint";
+
+      const dayBreaks = settings.dayBreaks || defaultDayBreaks();
+      document.querySelectorAll(".break-start").forEach((el) => {
+        const day = el.dataset.day;
+        el.value = dayBreaks?.[day]?.breakStart || "";
+      });
+      document.querySelectorAll(".break-end").forEach((el) => {
+        const day = el.dataset.day;
+        el.value = dayBreaks?.[day]?.breakEnd || "";
+      });
+      document.querySelectorAll(".lunch-start").forEach((el) => {
+        const day = el.dataset.day;
+        el.value = dayBreaks?.[day]?.lunchStart || "";
+      });
+      document.querySelectorAll(".lunch-end").forEach((el) => {
+        const day = el.dataset.day;
+        el.value = dayBreaks?.[day]?.lunchEnd || "";
+      });
+    }
 
     // ======================
     // Salvataggi
     // ======================
-    function saveClass() {
-      classInfo = {
-        classe: classeInput.value.trim(),
-        scuola: scuolaInput.value.trim(),
-        anno: annoInput.value.trim(),
-      };
-      localStorage.setItem(KEY_CLASS, JSON.stringify(classInfo));
-      syncClassUI();
-      updateFooterTime();
-     saveIfLoggedIn();
+    function openSettingsModal() {
+      populateSettingsModal();
+      modalBg.style.display = "flex";
     }
 
-    classeInput.addEventListener("change", saveClass);
-    scuolaInput.addEventListener("change", saveClass);
-    annoInput.addEventListener("change", saveClass);
+    function closeSettingsModal() {
+      modalBg.style.display = "none";
+    }
+
+    modalOpenBtn.addEventListener("click", openSettingsModal);
+    modalClose.addEventListener("click", closeSettingsModal);
+    modalCancel.addEventListener("click", closeSettingsModal);
+    modalBg.addEventListener("click", (e) => {
+      if (e.target === modalBg) closeSettingsModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeSettingsModal();
+    });
 
     function saveSettings() {
-      const newBreaks = {};
-      document.querySelectorAll(".break-intervallo").forEach((el) => {
-        const day = el.dataset.day;
-        newBreaks[day] = {
-          ...(settings.breaks?.[day] || {}),
-          intervalloAfter: parseInt(el.value || "0", 10),
+      const startVal = oraInizioModal.value || "08:00";
+      const durataVal = parseInt(durataModal.value || "46", 10);
+      const numOreVal = parseInt(numOreModal.value || "7", 10);
+
+      const newDayBreaks = defaultDayBreaks();
+      let hasError = false;
+
+      DAYS.forEach((_, dayIdx) => {
+        const bStart = document.querySelector(`.break-start[data-day="${dayIdx}"]`)?.value || "";
+        const bEnd = document.querySelector(`.break-end[data-day="${dayIdx}"]`)?.value || "";
+        const lStart = document.querySelector(`.lunch-start[data-day="${dayIdx}"]`)?.value || "";
+        const lEnd = document.querySelector(`.lunch-end[data-day="${dayIdx}"]`)?.value || "";
+
+        const bStartMin = bStart ? parseTime(bStart) : null;
+        const bEndMin = bEnd ? parseTime(bEnd) : null;
+        const lStartMin = lStart ? parseTime(lStart) : null;
+        const lEndMin = lEnd ? parseTime(lEnd) : null;
+
+        if ((bStartMin != null || bEndMin != null) && (bStartMin == null || bEndMin == null || bStartMin >= bEndMin)) {
+          alert(`Intervallo non valido per ${DAYS[dayIdx]} (start/end).`);
+          hasError = true;
+          return;
+        }
+
+        if ((lStartMin != null || lEndMin != null) && (lStartMin == null || lEndMin == null || lStartMin >= lEndMin)) {
+          alert(`Pausa pranzo non valida per ${DAYS[dayIdx]} (start/end).`);
+          hasError = true;
+          return;
+        }
+
+        if (bStartMin != null && lStartMin != null && overlaps(bStartMin, bEndMin, lStartMin, lEndMin)) {
+          alert(`Sovrapposizione tra intervallo e pausa pranzo in ${DAYS[dayIdx]}.`);
+          hasError = true;
+          return;
+        }
+
+        newDayBreaks[dayIdx] = {
+          breakStart: bStart,
+          breakEnd: bEnd,
+          lunchStart: lStart,
+          lunchEnd: lEnd,
         };
       });
-      document.querySelectorAll(".break-pranzo").forEach((el) => {
-        const day = el.dataset.day;
-        newBreaks[day] = {
-          ...(newBreaks[day] || settings.breaks?.[day] || {}),
-          pranzoAfter: parseInt(el.value || "0", 10),
-        };
-      });
-      document.querySelectorAll(".break-intervallo-min").forEach((el) => {
-        const day = el.dataset.day;
-        newBreaks[day] = {
-          ...(newBreaks[day] || settings.breaks?.[day] || {}),
-          intervalloMin: parseInt(el.value || "10", 10),
-        };
-      });
-      document.querySelectorAll(".break-pranzo-min").forEach((el) => {
-        const day = el.dataset.day;
-        newBreaks[day] = {
-          ...(newBreaks[day] || settings.breaks?.[day] || {}),
-          pranzoMin: parseInt(el.value || "60", 10),
-        };
-      });
+
+      if (hasError) return;
+
+      classInfo = {
+        classe: classeInputModal.value.trim(),
+        scuola: scuolaInputModal.value.trim(),
+        anno: annoInputModal.value.trim(),
+      };
 
       settings = {
         ...settings,
-        start: oraInizioEl.value || "08:00",
-        durata: parseInt(durataEl.value || "46", 10),
-        numOre: parseInt(numOreEl.value || "7", 10),
-        // legacy values kept for backwards compatibility
-        intervalloIndex: settings.intervalloIndex || 0,
-        pranzoIndex: settings.pranzoIndex || 0,
+        start: startVal,
+        durata: durataVal,
+        numOre: numOreVal,
         fineScuola: fineScuolaInput.value || settings.fineScuola,
-        breaks: newBreaks,
+        theme: themeSelectModal.value || settings.theme,
+        dayBreaks: newDayBreaks,
+      };
+
+      localStorage.setItem(KEY_CLASS, JSON.stringify(classInfo));
+      localStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
+
+      applyTheme(settings.theme);
+      syncClassUI();
+      buildScheduleTable();
+      updateStorageInfo();
+      updateFooterTime();
+      updateLessonProgress();
+      saveIfLoggedIn();
+      closeSettingsModal();
+    }
+
+    function saveFineScuola() {
+      settings = {
+        ...settings,
+        fineScuola: fineScuolaInput.value || settings.fineScuola,
       };
       localStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
       updateStorageInfo();
       updateFooterTime();
-    saveIfLoggedIn();
+      saveIfLoggedIn();
     }
 
-    document
-      .getElementById("applySchedule")
-      .addEventListener("click", () => {
-        saveSettings();
-        buildScheduleTable();
-        updateLessonProgress();
-      });
+    modalSave.addEventListener("click", saveSettings);
 
     fineScuolaInput.addEventListener("change", () => {
-      saveSettings();
+      saveFineScuola();
       updateFineScuolaCountdown();
     });
-    themeSelect.addEventListener("change", () => {
-  settings.theme = themeSelect.value;
-  localStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
-
-  applyTheme(settings.theme);
-
-  saveIfLoggedIn();
-});
-
-
     // ======================
     // Storage info
     // ======================
@@ -1326,45 +1478,78 @@ function applyTheme(themeName) {
     // ======================
     // Orario settimanale
     // ======================
-    const DAYS = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
     const scheduleWrapper = document.getElementById("scheduleWrapper");
     const importScheduleBtn = document.getElementById("importScheduleBtn");
     const scheduleImageInput = document.getElementById("scheduleImageInput");
 
     function buildDayTimeline(dayIndex) {
-      const startStr = settings.start || "08:00";
       const durata = settings.durata || 46;
       const rows = settings.numOre || 7;
-      const dayBreaks = settings.breaks?.[dayIndex] || {};
-      const intervalloAfter = dayBreaks.intervalloAfter || 0;
-      const pranzoAfter = dayBreaks.pranzoAfter || 0;
-      const intervalloMin = dayBreaks.intervalloMin || 10;
-      const pranzoMin = dayBreaks.pranzoMin || 60;
+      const startMinutes = parseTime(settings.start || "08:00") || 0;
+      const dayBreaks = settings.dayBreaks?.[dayIndex] || {};
 
-      const [startH, startM] = startStr.split(":").map((x) => parseInt(x, 10));
-      let cursor = new Date();
-      cursor.setSeconds(0, 0);
-      cursor.setHours(startH, startM);
+      const blocks = [];
+      const dayBreakList = [];
+      if (dayBreaks.breakStart && dayBreaks.breakEnd) {
+        const s = parseTime(dayBreaks.breakStart);
+        const e = parseTime(dayBreaks.breakEnd);
+        if (s != null && e != null && s < e) {
+          dayBreakList.push({ type: "break", start: s, end: e });
+        }
+      }
+      if (dayBreaks.lunchStart && dayBreaks.lunchEnd) {
+        const s = parseTime(dayBreaks.lunchStart);
+        const e = parseTime(dayBreaks.lunchEnd);
+        if (s != null && e != null && s < e) {
+          dayBreakList.push({ type: "pranzo", start: s, end: e });
+        }
+      }
+      dayBreakList.sort((a, b) => a.start - b.start);
 
-      const timeline = [];
-      const pushSlot = (type, index, durationMin) => {
-        const slotStart = new Date(cursor);
-        cursor.setMinutes(cursor.getMinutes() + durationMin);
-        const slotEnd = new Date(cursor);
-        timeline.push({ type, index, start: slotStart, end: slotEnd });
+      let cursorMin = startMinutes;
+      let breakIdx = 0;
+      const toDate = (minutes) => {
+        const d = new Date();
+        d.setHours(0, 0, 0, 0);
+        d.setMinutes(minutes);
+        return d;
+      };
+
+      const pushSlot = (type, index, startMin, endMin) => {
+        blocks.push({ type, index, start: toDate(startMin), end: toDate(endMin) });
       };
 
       for (let i = 1; i <= rows; i++) {
-        pushSlot("lesson", i, durata);
-        if (i === intervalloAfter && intervalloAfter > 0) {
-          pushSlot("break", "intervallo", intervalloMin);
+        while (breakIdx < dayBreakList.length && dayBreakList[breakIdx].start <= cursorMin) {
+          const br = dayBreakList[breakIdx];
+          pushSlot("break", br.type, br.start, br.end);
+          cursorMin = Math.max(cursorMin, br.end);
+          breakIdx++;
         }
-        if (i === pranzoAfter && pranzoAfter > 0) {
-          pushSlot("break", "pranzo", pranzoMin);
+
+        const nextBreak = dayBreakList[breakIdx];
+        if (nextBreak && nextBreak.start < cursorMin + durata) {
+          pushSlot("break", nextBreak.type, nextBreak.start, nextBreak.end);
+          cursorMin = Math.max(cursorMin, nextBreak.end);
+          breakIdx++;
+          i--;
+          continue;
         }
+
+        const lessonStart = cursorMin;
+        const lessonEnd = cursorMin + durata;
+        pushSlot("lesson", i, lessonStart, lessonEnd);
+        cursorMin = lessonEnd;
       }
 
-      return timeline;
+      while (breakIdx < dayBreakList.length) {
+        const br = dayBreakList[breakIdx];
+        pushSlot("break", br.type, br.start, br.end);
+        cursorMin = Math.max(cursorMin, br.end);
+        breakIdx++;
+      }
+
+      return blocks;
     }
 
 
@@ -1435,8 +1620,8 @@ function applyTheme(themeName) {
       const daysTimelines = DAYS.map((_, idx) => buildDayTimeline(idx));
       const maxRows = Math.max(...daysTimelines.map((t) => t.length));
       const labelTimeline =
-        daysTimelines[0] || daysTimelines.find((t) => t && t.length > 0) || [];
-      const formatTime = (d) => d.toTimeString().slice(0, 5);
+        daysTimelines.reduce((acc, tl) => (tl && tl.length > (acc?.length || 0) ? tl : acc), []) || [];
+      const formatDateToStr = (d) => formatTime(d.getHours() * 60 + d.getMinutes());
 
       let html = `<table><thead><tr><th>Ora</th>`;
       DAYS.forEach((d) => {
@@ -1450,7 +1635,7 @@ function applyTheme(themeName) {
       for (let row = 0; row < maxRows; row++) {
         const labelSlot = labelTimeline[row];
         const label = labelSlot
-          ? `${formatTime(labelSlot.start)}–${formatTime(labelSlot.end)}`
+          ? `${formatDateToStr(labelSlot.start)}–${formatDateToStr(labelSlot.end)}`
           : "";
         html += `<tr><td>${label}</td>`;
 
@@ -1466,7 +1651,7 @@ function applyTheme(themeName) {
             html += `<td class="slot pause-cell">
               <div class="slot-inner">
                 <div class="subject">${name}</div>
-                <div class="slot-meta">Ripresa: ${formatTime(daySlot.end)}</div>
+                <div class="slot-meta">Ripresa: ${formatDateToStr(daySlot.end)}</div>
               </div>
             </td>`;
             continue;
@@ -1773,6 +1958,10 @@ scheduleImageInput.addEventListener("change", async (e) => {
     updateFineScuolaCountdown();
     updateLessonProgress();
     setInterval(updateLessonProgress, 60000); // aggiorna ogni minuto
+    // Manual test rapido:
+    // 1) Intervallo 10 min a metà mattina: imposta 10:20-10:30 e verifica tabella + barra.
+    // 2) Pausa pranzo lunga: imposta 13:00-13:50 e controlla next lesson dopo la pausa.
+    // 3) Giorni diversi: cambia orari di pausa per due giorni e verifica che la tabella mostri blocchi differenti.
 
 
     // ======================
@@ -1795,17 +1984,8 @@ scheduleImageInput.addEventListener("change", async (e) => {
         start: "08:00",
         durata: 46,
         numOre: 7,
-        intervalloIndex: 2,
-        pranzoIndex: 0,
         fineScuola: null,
-        breaks: {
-          0: { intervalloAfter: 2, pranzoAfter: 0, intervalloMin: 10, pranzoMin: 60 },
-          1: { intervalloAfter: 2, pranzoAfter: 0, intervalloMin: 10, pranzoMin: 60 },
-          2: { intervalloAfter: 2, pranzoAfter: 0, intervalloMin: 10, pranzoMin: 60 },
-          3: { intervalloAfter: 2, pranzoAfter: 0, intervalloMin: 10, pranzoMin: 60 },
-          4: { intervalloAfter: 2, pranzoAfter: 0, intervalloMin: 10, pranzoMin: 60 },
-          5: { intervalloAfter: 0, pranzoAfter: 0, intervalloMin: 10, pranzoMin: 60 },
-        },
+        dayBreaks: defaultDayBreaks(),
       };
       classInfo = { classe: "", scuola: "", anno: "" };
       syncClassUI();
@@ -1882,4 +2062,3 @@ onAuthStateChanged(auth, async (user) => {
   </script>
 </body>
 </html>
-
