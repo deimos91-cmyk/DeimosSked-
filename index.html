@@ -765,7 +765,9 @@
 .app-shell{ gap: 10px; max-width: 1400px; }
 .grid{ column-gap: 16px; row-gap: 10px; }
 .card.settings-action-card{ width: 100%; }
-
+.grid.grid-single{
+  grid-template-columns: 1fr !important;
+}
   </style>
 </head>
 <body> 
@@ -844,7 +846,7 @@
     </header>
 
     <!-- Settings row -->
-    <section class="grid">
+    <section class="grid grid-single">
       <div class="card settings-action-card">
         <div>
           <div class="settings-action-title">Orario • impostazioni</div>
