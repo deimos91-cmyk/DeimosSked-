@@ -1076,7 +1076,7 @@
     apiKey: "AIzaSyDrpEyDbDEet_Mv6t7rmgKKiP_W-1Q3aDc",
     authDomain: "deimossked.firebaseapp.com",
     projectId: "deimossked",
-    storageBucket: "deimossked.appspot.com",
+    storageBucket: "deimossked.firebasestorage.app",
     messagingSenderId: "373296948870",
     appId: "1:373296948870:web:9eb9d25989a07c0bf09307",
     measurementId: "G-WJGB7KLVW1"
@@ -2191,7 +2191,54 @@ onAuthStateChanged(auth, async (user) => {
   } else {
     loginStatusEl.textContent = "Non sei loggato";
   }
+const OCR_URL = "https://us-central1-deimossked.cloudfunctions.net/ocrImage";
+
+const scheduleImageInput = document.getElementById("scheduleImageInput");
+const importScheduleBtn = document.getElementById("importScheduleBtn"); // se esiste
+
+scheduleImageInput.addEventListener("change", async (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  try {
+    if (importScheduleBtn) {
+      importScheduleBtn.textContent = "Leggo immagine...";
+      importScheduleBtn.disabled = true;
+    }
+
+    // file → base64
+    const base64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+    const resp = await fetch(OCR_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ imageBase64: base64 })
+    });
+
+    const json = await resp.json();
+    if (!resp.ok) throw new Error(json?.error || "Errore OCR");
+
+    console.log("OCR TEXT:", json.text);
+    alert("OCR OK:\n\n" + json.text.slice(0, 1000));
+  } catch (err) {
+    console.error(err);
+    alert("Errore OCR: " + err.message);
+  } finally {
+    if (importScheduleBtn) {
+      importScheduleBtn.textContent = "Importa da foto";
+      importScheduleBtn.disabled = false;
+    }
+    scheduleImageInput.value = "";
+  }
 });
-  </script>
+
+});
+
+</script>
 </body>
 </html>
