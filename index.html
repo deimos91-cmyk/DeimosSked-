@@ -606,6 +606,52 @@
       margin-top: 10px;
     }
 
+    /* Settings action card */
+    .settings-action-card {
+      padding: 10px 12px;
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .settings-action-title {
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .settings-action-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .settings-action-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .settings-reset {
+      padding: 4px 8px;
+      font-size: 0.75rem;
+      border-style: dashed;
+    }
+    @media (max-width: 640px) {
+      .settings-action-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+      .settings-action-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+      .settings-action-sub {
+        display: none;
+      }
+    }
+
     .footer-bar {
       margin-top: 4px;
       font-size: 0.75rem;
@@ -732,14 +778,14 @@
 
     <!-- Settings row -->
     <section class="grid">
-      <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+      <div class="card settings-action-card">
         <div>
-          <div class="card-title">Orario • Impostazioni</div>
-          <div class="top-sub">Configura classe, orari e pause.</div>
+          <div class="settings-action-title">Orario • impostazioni</div>
+          <div class="settings-action-sub">Configura classe, orari e pause.</div>
         </div>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <div class="settings-action-actions">
           <button class="btn" id="openSettingsModal">⚙️ Apri impostazioni</button>
-          <button class="btn-ghost" id="resetAll">Reset dati</button>
+          <button class="btn-ghost settings-reset" id="resetAll">Reset dati</button>
         </div>
       </div>
 
@@ -2062,3 +2108,4 @@ onAuthStateChanged(auth, async (user) => {
   </script>
 </body>
 </html>
+
