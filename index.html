@@ -43,14 +43,19 @@
     }
 
     body {
-      min-height: 100vh;
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
-        "SF Pro Text", sans-serif;
-      background: radial-gradient(circle at top, #e6fbf4 0, var(--bg) 40%);
-      color: var(--text);
-      padding: 16px;
-      -webkit-font-smoothing: antialiased;
-    }
+  min-height: 100vh;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+    "SF Pro Text", sans-serif;
+ background: radial-gradient(
+  circle at top,
+  var(--accent) 0,
+  var(--accent) 25%,
+  var(--bg) 60%
+);
+  color: var(--text);
+  padding: 16px;
+  -webkit-font-smoothing: antialiased;
+}
 
     .app-shell {
       max-width: 1180px;
@@ -316,7 +321,7 @@
       position: absolute;
       inset: 3px;
       border-radius: 10px;
-      border: 1px solid rgba(126, 227, 195, 0.9);
+      border: 1px solid var(--accent);
       pointer-events: none;
     }
 
@@ -485,7 +490,28 @@
       border: 1px dashed rgba(148, 163, 184, 0.5);
       font-size: 0.8rem;
       margin-top: 4px;
-    }
+    } 
+    .lesson-progress-track {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.25);
+  overflow: hidden;
+}
+
+.lesson-progress-bar {
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: width 0.25s ease-out;
+}
+
+.lesson-progress-meta {
+  margin-top: 4px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
 
     @media (prefers-color-scheme: dark) {
       .count-box {
@@ -666,6 +692,20 @@
             <input id="numOre" type="number" value="7" />
           </div>
         </div>
+        <div class="card-main-title" style="margin-top:8px;">
+  Tema colore
+</div>
+<div class="form-row">
+  <div>
+    <label>Tema</label>
+    <select id="themeSelect">
+      <option value="mint">Mint</option>
+      <option value="sky">Sky</option>
+      <option value="lavender">Lavender</option>
+      <option value="sunset">Sunset</option>
+    </select>
+  </div>
+</div>
 
         <div class="form-row">
           <div>
@@ -703,7 +743,23 @@
             Il conteggio passa automaticamente all’anno scolastico successivo
             quando la data è superata.
           </div>
-        </div>
+        </div> 
+        <div class="card-main-title" style="margin-top:12px;">
+  Lezione in corso
+</div>
+<div class="count-box" id="lessonProgressBox">
+  <div class="count-main" id="lessonProgressText">
+    Nessuna lezione in corso.
+  </div>
+  <div style="margin-top:6px;">
+    <div class="lesson-progress-track">
+      <div class="lesson-progress-bar" id="lessonProgressBar"></div>
+    </div>
+    <div class="lesson-progress-meta" id="lessonProgressMeta">
+      —
+    </div>
+  </div>
+</div>
 
         <div class="card-main-title" style="margin-top:12px;">
           Stato locale
@@ -720,10 +776,16 @@
     <section class="grid">
       <!-- Left: timetable -->
       <div class="card">
-        <div class="card-header">
-          <div class="card-title">Orario settimanale</div>
-          <button class="btn-ghost" id="clearSchedule">Svuota orario</button>
-        </div>
+        <<div class="card-header">
+  <div class="card-title">Orario settimanale</div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    <button class="btn-ghost" id="importScheduleBtn">Importa da foto</button>
+    <button class="btn-ghost" id="clearSchedule">Svuota orario</button>
+  </div>
+</div>
+
+<input id="scheduleImageInput" type="file" accept="image/*" style="display:none;" />
+
         <div class="schedule-wrapper" id="scheduleWrapper"></div>
       </div>
 
@@ -785,6 +847,7 @@
     </footer>
   </div>
 
+ <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script type="module">
   // Import Firebase
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
@@ -835,6 +898,8 @@ async function loadUserData(uid) {
   syncSettingsUI();
   renderNotes();
   buildScheduleTable();
+  applyTheme(settings.theme || "mint");
+
 
   console.log("Dati cloud caricati");
 } 
@@ -915,12 +980,40 @@ function saveIfLoggedIn() {
       intervalloIndex: 2,
       pranzoIndex: 0,
       fineScuola: null,
+      theme: "mint",
     };
     let classInfo = {
       classe: "",
       scuola: "",
       anno: "",
     };
+    const THEME_CONFIGS = {
+  mint: {
+    accent: "#7ee3c3",
+    accentStrong: "#0f766e",
+  },
+  sky: {
+    accent: "#7dd3fc",
+    accentStrong: "#0369a1",
+  },
+  lavender: {
+    accent: "#c4b5fd",
+    accentStrong: "#6d28d9",
+  },
+  sunset: {
+    accent: "#fdba74",
+    accentStrong: "#c2410c",
+  },
+};
+
+function applyTheme(themeName) {
+  const theme = THEME_CONFIGS[themeName] || THEME_CONFIGS.mint;
+  const root = document.documentElement;
+
+  root.style.setProperty("--accent", theme.accent);
+  root.style.setProperty("--accent-strong", theme.accentStrong);
+}
+
 
     // ======================
     // Tutorial
@@ -966,7 +1059,7 @@ function saveIfLoggedIn() {
     }
 
     loadData();
-
+    applyTheme(settings.theme || "mint");
     // ======================
     // Aggiorna UI con dati
     // ======================
@@ -974,7 +1067,10 @@ function saveIfLoggedIn() {
     const scuolaInput = document.getElementById("scuolaInput");
     const annoInput = document.getElementById("annoInput");
     const classLabel = document.getElementById("classLabel");
-
+    const lessonProgressText = document.getElementById("lessonProgressText");
+    const lessonProgressMeta = document.getElementById("lessonProgressMeta");
+    const lessonProgressBar = document.getElementById("lessonProgressBar");
+    const themeSelect = document.getElementById("themeSelect");
     function syncClassUI() {
       classeInput.value = classInfo.classe || "";
       scuolaInput.value = classInfo.scuola || "";
@@ -1008,7 +1104,9 @@ function saveIfLoggedIn() {
         const year = now.getFullYear();
         fineScuolaInput.value = `${year}-06-10`;
         settings.fineScuola = fineScuolaInput.value;
-      }
+      } 
+      themeSelect.value = settings.theme || "mint";
+
     }
 
     syncSettingsUI();
@@ -1052,12 +1150,22 @@ function saveIfLoggedIn() {
       .addEventListener("click", () => {
         saveSettings();
         buildScheduleTable();
+        updateLessonProgress();
       });
 
     fineScuolaInput.addEventListener("change", () => {
       saveSettings();
       updateFineScuolaCountdown();
     });
+    themeSelect.addEventListener("change", () => {
+  settings.theme = themeSelect.value;
+  localStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
+
+  applyTheme(settings.theme);
+
+  saveIfLoggedIn();
+});
+
 
     // ======================
     // Storage info
@@ -1080,6 +1188,9 @@ function saveIfLoggedIn() {
     // ======================
     const DAYS = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
     const scheduleWrapper = document.getElementById("scheduleWrapper");
+    const importScheduleBtn = document.getElementById("importScheduleBtn");
+    const scheduleImageInput = document.getElementById("scheduleImageInput");
+
 
     function buildScheduleTable() {
       const rows = settings.numOre || 7;
@@ -1147,6 +1258,7 @@ function saveIfLoggedIn() {
           openPopupForSlot(key);
         });
       });
+      updateLessonProgress();
     }
 
     buildScheduleTable();
@@ -1160,6 +1272,40 @@ function saveIfLoggedIn() {
         buildScheduleTable();
         updateStorageInfo();
       });
+      importScheduleBtn.addEventListener("click", () => {
+  scheduleImageInput.click();
+});
+
+scheduleImageInput.addEventListener("change", async (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  try {
+    importScheduleBtn.textContent = "Sto leggendo...";
+    importScheduleBtn.disabled = true;
+
+    const { data } = await window.Tesseract.recognize(file, "ita", {
+      logger: (m) => {
+        if (m.status === "recognizing text" && typeof m.progress === "number") {
+          const pct = Math.round(m.progress * 100);
+          importScheduleBtn.textContent = `OCR ${pct}%`;
+        }
+      },
+    });
+
+    const text = (data?.text || "").trim();
+    console.log("OCR TEXT:", text);
+    alert("OCR OK (preview):\n\n" + text.slice(0, 1000));
+  } catch (err) {
+    console.error(err);
+    alert("Errore OCR");
+  } finally {
+    importScheduleBtn.textContent = "Importa da foto";
+    importScheduleBtn.disabled = false;
+    scheduleImageInput.value = "";
+  }
+});
+
 
     // ======================
     // Popup editor slot
@@ -1199,6 +1345,7 @@ function saveIfLoggedIn() {
       buildScheduleTable();
       updateStorageInfo();
       updateFooterTime();
+      updateLessonProgress();
       saveIfLoggedIn();
       closePopup();
     });
@@ -1210,6 +1357,7 @@ function saveIfLoggedIn() {
       buildScheduleTable();
       updateStorageInfo();
       updateFooterTime();
+      updateLessonProgress();
       saveIfLoggedIn();
       closePopup();
     });
@@ -1361,7 +1509,89 @@ function saveIfLoggedIn() {
       if (!settings.fineScuola) {
         el.textContent = "Mancano — giorni alla fine della scuola.";
         return;
-      }
+      } 
+      function updateLessonProgress() {
+  if (!lessonProgressText || !lessonProgressMeta || !lessonProgressBar) return;
+
+  const now = new Date();
+  const weekday = now.getDay(); // 0=Dom, 1=Lun, ...
+  const dayIndex = weekday - 1; // 0=Lunedì, ... 5=Sabato
+
+  // se non è giorno scolastico
+  if (dayIndex < 0 || dayIndex > 5) {
+    lessonProgressText.textContent = "Nessuna lezione in corso.";
+    lessonProgressMeta.textContent = "Oggi non hai lezioni.";
+    lessonProgressBar.style.width = "0%";
+    return;
+  }
+
+  const startStr = settings.start || "08:00";
+  const durata = settings.durata || 46;
+  const rows = settings.numOre || 7;
+  const intervalloIndex = settings.intervalloIndex || 0;
+  const pranzoIndex = settings.pranzoIndex || 0;
+
+  const [startH, startM] = startStr.split(":").map(x => parseInt(x, 10));
+
+  // ora di inizio della prima lezione
+  let t = new Date();
+  t.setSeconds(0, 0);
+  t.setHours(startH, startM);
+
+  let currentSlot = null;
+
+  for (let i = 1; i <= rows; i++) {
+    const slotStart = new Date(t);
+    t.setMinutes(t.getMinutes() + durata);
+    const slotEnd = new Date(t);
+
+    if (now >= slotStart && now < slotEnd) {
+      currentSlot = { index: i, start: slotStart, end: slotEnd };
+      break;
+    }
+
+    if (i === intervalloIndex || i === pranzoIndex) {
+      t.setMinutes(t.getMinutes() + 10);
+    }
+  }
+
+  if (!currentSlot) {
+    lessonProgressText.textContent = "Nessuna lezione in corso.";
+    lessonProgressMeta.textContent = "Fuori orario scolastico.";
+    lessonProgressBar.style.width = "0%";
+    return;
+  }
+
+  // materia attuale
+  const key = `${dayIndex}-${currentSlot.index - 1}`;
+  const slotData = scheduleData[key] || { materia: "" };
+  const materia = slotData.materia || "Ora libera";
+
+  // percentuale completata
+  const total = currentSlot.end - currentSlot.start;
+  const done = now - currentSlot.start;
+  const percent = Math.max(0, Math.min(100, (done / total) * 100));
+
+  // minuti rimanenti
+  const minutesLeft = Math.ceil((currentSlot.end - now) / 60000);
+
+  // prossima materia
+  let nextInfo = "Ultima ora della giornata.";
+
+  if (currentSlot.index < rows) {
+    const nextKey = `${dayIndex}-${currentSlot.index}`;
+    const nextSlot = scheduleData[nextKey] || { materia: "" };
+    const nextMateria = nextSlot.materia || "—";
+    nextInfo = `Mancano ${minutesLeft} min alla prossima ora (${nextMateria}).`;
+  } else {
+    nextInfo = `Mancano ${minutesLeft} min alla fine delle lezioni.`;
+  }
+
+  // aggiorna UI
+  lessonProgressText.textContent = `Lezione: ${materia} (ora ${currentSlot.index})`;
+  lessonProgressMeta.textContent = nextInfo;
+  lessonProgressBar.style.width = `${percent}%`;
+}
       const now = new Date();
       let end = new Date(settings.fineScuola);
       if (isNaN(end.getTime())) {
@@ -1377,6 +1607,9 @@ function saveIfLoggedIn() {
     }
 
     updateFineScuolaCountdown();
+    updateLessonProgress();
+    setInterval(updateLessonProgress, 60000); // aggiorna ogni minuto
+
 
     // ======================
     // Reset totale
