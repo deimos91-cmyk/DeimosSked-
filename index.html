@@ -2220,11 +2220,14 @@ scheduleImageInput.addEventListener("change", async (e) => {
       body: JSON.stringify({ imageBase64: base64 })
     });
 
-    const json = await resp.json();
+     const json = await resp.json();
     if (!resp.ok) throw new Error(json?.error || "Errore OCR");
 
     console.log("OCR TEXT:", json.text);
-    alert("OCR OK:\n\n" + json.text.slice(0, 1000));
+    alert("OCR OK:\n\n" + json.text.slice(0, 3000));
+    console.log("OCR LENGTH:", (json.text || "").length);
+   alert("OCR OK (len=" + (json.text || "").length + "):\n\n" + (json.text || "").slice(0, 3000));
+
   } catch (err) {
     console.error(err);
     alert("Errore OCR: " + err.message);
