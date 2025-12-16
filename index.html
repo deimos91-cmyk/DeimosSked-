@@ -1225,6 +1225,135 @@ function saveIfLoggedIn() {
       4: { breakStart: "", breakEnd: "", lunchStart: "", lunchEnd: "" },
       5: { breakStart: "", breakEnd: "", lunchStart: "", lunchEnd: "" },
     });
+    // ======================
+// OCR → ORARIO
+// ======================
+
+// raggruppa elementi per coordinata Y (righe)
+function clusterByY(items, tolerance = 8) {
+  const rows = [];
+  items.forEach(it => {
+    let row = rows.find(r => Math.abs(r.y - it.y) < tolerance);
+    if (!row) {
+      row = { y: it.y, items: [] };
+      rows.push(row);
+    }
+    row.items.push(it);
+  });
+  return rows.sort((a, b) => a.y - b.y);
+}
+
+// raggruppa elementi per coordinata X (colonne)
+function clusterByX(items, tolerance = 15) {
+  const cols = [];
+  items.forEach(it => {
+    let col = cols.find(c => Math.abs(c.x - it.x) < tolerance);
+    if (!col) {
+      col = { x: it.x, items: [] };
+      cols.push(col);
+    }
+    col.items.push(it);
+  });
+  return cols.sort((a, b) => a.x - b.x);
+}
+
+// normalizza nome materia
+function normalizeSubject(text) {
+  if (!text) return "";
+  const t = text.toLowerCase();
+
+  if (t.includes("mate")) return "Matematica";
+  if (t.includes("fisic")) return "Fisica";
+  if (t.includes("scienze")) return "Scienze Naturali";
+  if (t.includes("letter")) return "Lettere";
+  if (t.includes("ingles")) return "Inglese";
+  if (t.includes("filos")) return "Filosofia e Storia";
+  if (t.includes("storia")) return "Filosofia e Storia";
+  if (t.includes("diritto")) return "Diritto ed econ dello sport";
+  if (t.includes("sport")) return "Discipline sportive";
+  if (t.includes("relig")) return "Religione cattolica";
+  if (t.includes("civic")) return "Educazione civica";
+  if (t.includes("motor")) return "Scienze motorie e sportive";
+
+  return text.trim();
+}
+
+// applica OCR all'orario
+function applyScheduleFromOcrItems(items) {
+  if (!items || !items.length) {
+    alert("OCR vuoto.");
+    return;
+  }
+
+  // filtra solo parole utili (niente aule / sedi / numeri)
+  const filtered = items.filter(it => {
+    const t = it.t.toLowerCase();
+    if (!t) return false;
+    if (t.includes("aula")) return false;
+    if (t.includes("sede")) return false;
+    if (t.match(/^\d/)) return false;
+    if (t.length < 3) return false;
+    return true;
+  });
+
+  // raggruppa per righe
+  const rows = clusterByY(filtered);
+
+  // prima riga con giorni
+  const headerRow = rows.find(r =>
+    r.items.some(i => ["lun", "mar", "mer", "gio", "ven", "sab"].includes(i.t.toLowerCase()))
+  );
+
+  if (!headerRow) {
+    alert("Non trovo i giorni della settimana.");
+    return;
+  }
+
+  const dayCols = clusterByX(headerRow.items);
+  const dayX = dayCols.map(c => c.x);
+
+  const dayMap = {
+    0: "LUN",
+    1: "MAR",
+    2: "MER",
+    3: "GIO",
+    4: "VEN",
+    5: "SAB",
+  };
+
+  scheduleData = {};
+
+  let hourIndex = 0;
+
+  rows.forEach(row => {
+    if (row === headerRow) return;
+
+    const cols = clusterByX(row.items);
+
+    cols.forEach((col, idx) => {
+      if (idx === 0) return; // prima colonna = orari
+
+      const subjectText = col.items.map(i => i.t).join(" ");
+      const subject = normalizeSubject(subjectText);
+      if (!subject) return;
+
+      const dayIndex = idx - 1;
+      if (dayIndex < 0 || dayIndex > 5) return;
+
+      const key = `${dayIndex}-${hourIndex}`;
+      scheduleData[key] = { materia: subject, note: "" };
+    });
+
+    hourIndex++;
+  });
+
+  localStorage.setItem("deimosked_schedule_v1", JSON.stringify(scheduleData));
+  buildScheduleTable();
+  updateStorageInfo();
+  updateFooterTime();
+
+  alert("Orario importato dall'immagine.");
+}
 
     function migrateLegacyBreaks(baseSettings, legacyBreaks) {
       const result = defaultDayBreaks();
