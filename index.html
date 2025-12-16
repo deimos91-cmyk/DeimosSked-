@@ -2224,7 +2224,13 @@ scheduleImageInput.addEventListener("change", async (e) => {
     if (!resp.ok) throw new Error(json?.error || "Errore OCR");
 
     console.log("OCR TEXT:", json.text);
-    alert("OCR OK:\n\n" + json.text.slice(0, 3000));
+    const lines = json.text
+  .split("\n")
+  .map(l => l.trim())
+  .filter(l => l.length > 0);
+
+   console.log("OCR LINES:", lines);
+
     console.log("OCR LENGTH:", (json.text || "").length);
    alert("OCR OK (len=" + (json.text || "").length + "):\n\n" + (json.text || "").slice(0, 3000));
 
