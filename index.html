@@ -1828,47 +1828,6 @@ function applyTheme(themeName) {
   scheduleImageInput.click();
 });
 
-scheduleImageInput.addEventListener("change", async (e) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-
-  try {
-    if (!currentUser) {
-      alert("Devi essere loggato per usare l’import da foto.");
-      return;
-    }
-
-    importScheduleBtn.textContent = "Upload...";
-    importScheduleBtn.disabled = true;
-
-    // 1) Upload su Firebase Storage
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-    const path = `ocr/${currentUser.uid}/${Date.now()}_${safeName}`;
-    const fileRef = ref(storage, path);
-
-    await uploadBytes(fileRef, file);
-
-    importScheduleBtn.textContent = "OCR...";
-    const url = await getDownloadURL(fileRef);
-
-    // 2) Chiama la Cloud Function OCR (callable)
-    const ocrFn = httpsCallable(functions, "ocrSchedule");
-    const res = await ocrFn({ imageUrl: url });
-
-    const text = (res?.data?.text || "").trim();
-    console.log("OCR TEXT:", text);
-
-    alert("OCR OK (preview):\n\n" + text.slice(0, 1200));
-  } catch (err) {
-    console.error(err);
-    alert("Errore import/OCR. Controlla console.");
-  } finally {
-    importScheduleBtn.textContent = "Importa da foto";
-    importScheduleBtn.disabled = false;
-    scheduleImageInput.value = "";
-  }
-});
-
 
 
     // ======================
@@ -2221,6 +2180,9 @@ scheduleImageInput.addEventListener("change", async (e) => {
     });
 
     const json = await resp.json();
+    console.log("OCR ITEMS sample:", (json.items || []).slice(0, 20));
+    applyScheduleFromOcrItems(json.items || []);
+
     if (!resp.ok) throw new Error(json?.error || "Errore OCR");
 
     console.log("OCR TEXT:", json.text);
