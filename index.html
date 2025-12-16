@@ -2220,7 +2220,7 @@ scheduleImageInput.addEventListener("change", async (e) => {
       body: JSON.stringify({ imageBase64: base64 })
     });
 
-     const json = await resp.json();
+    const json = await resp.json();
     if (!resp.ok) throw new Error(json?.error || "Errore OCR");
 
     console.log("OCR TEXT:", json.text);
@@ -2230,6 +2230,7 @@ scheduleImageInput.addEventListener("change", async (e) => {
   .filter(l => l.length > 0);
 
    console.log("OCR LINES:", lines);
+   console.log("OCR ITEMS sample:", (json.items || []).slice(0, 20));
 
     console.log("OCR LENGTH:", (json.text || "").length);
    alert("OCR OK (len=" + (json.text || "").length + "):\n\n" + (json.text || "").slice(0, 3000));
