@@ -2181,8 +2181,12 @@ scheduleImageInput.addEventListener("change", async (e) => {
 
     const json = await resp.json();
     console.log("OCR ITEMS sample:", (json.items || []).slice(0, 20));
-    applyScheduleFromOcrItems(json.items || []);
-
+    try {
+  applyScheduleFromOcrItems(json.items || []);
+} catch (e) {
+  console.error("PARSER ERROR:", e);
+  alert("PARSER ERROR: " + (e?.message || e));
+}
     if (!resp.ok) throw new Error(json?.error || "Errore OCR");
 
     console.log("OCR TEXT:", json.text);
@@ -2195,11 +2199,10 @@ scheduleImageInput.addEventListener("change", async (e) => {
    console.log("OCR ITEMS sample:", (json.items || []).slice(0, 20));
 
     console.log("OCR LENGTH:", (json.text || "").length);
-   alert("OCR OK (len=" + (json.text || "").length + "):\n\n" + (json.text || "").slice(0, 3000));
 
   } catch (err) {
     console.error(err);
-    alert("Errore OCR: " + err.message);
+    alert("Errore OCR: " + (err?.message || err));
   } finally {
     if (importScheduleBtn) {
       importScheduleBtn.textContent = "Importa da foto";
