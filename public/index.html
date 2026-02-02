@@ -1,0 +1,2348 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>DeimosSked · App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bg: #f5f7f9;
+      --card: #ffffff;
+      --text: #16181d;
+      --muted: #6f7380;
+      --accent: #7ee3c3;
+      --accent-strong: #0f766e;
+      --border: rgba(148, 163, 184, 0.45);
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.16);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #05060a;
+        --card: #11141b;
+        --text: #f7f8fc;
+        --muted: #9ca3b5;
+        --border: rgba(148, 163, 184, 0.6);
+        --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.7);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+  min-height: 100vh;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+    "SF Pro Text", sans-serif;
+ background: radial-gradient(
+  circle at top,
+  var(--accent) 0,
+  var(--accent) 25%,
+  var(--bg) 60%
+);
+  color: var(--text);
+  padding: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+    .app-shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .top-title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .top-title h1 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+    }
+
+    .top-sub {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 0.78rem;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(10px);
+      color: var(--muted);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .pill {
+        background: rgba(15, 23, 42, 0.85);
+      }
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.2fr);
+  column-gap: 16px;
+  row-gap: 8px; 
+}
+
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 14px 16px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-main-title {
+      font-size: 0.98rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      background: var(--accent);
+      color: #021310;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 7px 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 6px 18px rgba(15, 118, 110, 0.25);
+      transition: transform 120ms ease, box-shadow 120ms ease,
+        filter 120ms ease;
+    }
+
+    .btn:active {
+      transform: translateY(1px) scale(0.98);
+      box-shadow: 0 3px 12px rgba(15, 118, 110, 0.3);
+      filter: brightness(0.97);
+    }
+
+    .btn-ghost {
+      border-radius: 999px;
+      border: 1px dashed rgba(148, 163, 184, 0.55);
+      background: transparent;
+      color: var(--muted);
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      cursor: pointer;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 6px;
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 720px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: block;
+      margin-top: 4px;
+      margin-bottom: 2px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 7px 10px;
+      font-size: 0.85rem;
+      background: rgba(255, 255, 255, 0.88);
+      color: var(--text);
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      input,
+      select,
+      textarea {
+        background: #050816;
+        border-color: rgba(148, 163, 184, 0.6);
+      }
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    .schedule-wrapper {
+      overflow-x: auto;
+      margin-top: 6px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 640px;
+      font-size: 0.8rem;
+    }
+
+    th,
+    td {
+      padding: 7px 6px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    td:first-child,
+    th:first-child {
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    td.slot {
+      cursor: pointer;
+      border-radius: 10px;
+      transition: background 120ms ease, transform 80ms ease;
+      position: relative;
+    }
+
+    .slot-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: flex-start;
+      padding: 3px 8px;
+    }
+
+    .subject {
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .subject.empty {
+      opacity: 0.35;
+      font-weight: 400;
+    }
+
+    .slot-meta {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    td.slot:hover {
+      background: rgba(126, 227, 195, 0.08);
+      transform: translateY(-1px);
+    }
+
+    td.slot-today::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: 10px;
+      border: 1px solid var(--accent);
+      pointer-events: none;
+    }
+
+    /* Popup editor */
+    .popup-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .popup {
+      width: 100%;
+      max-width: 360px;
+      background: var(--card);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      padding: 16px 16px 14px;
+      animation: popupIn 140ms ease-out;
+    }
+
+    @keyframes popupIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .popup-title {
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .popup-close {
+      border: none;
+      background: transparent;
+      font-size: 1rem;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    .popup-actions {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .popup-secondary {
+      border-radius: 999px;
+      border: 1px dashed rgba(148, 163, 184, 0.7);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.78rem;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+
+    /* Notes */
+    .notes-list {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+
+    .note-item {
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(255, 255, 255, 0.92);
+      padding: 8px 9px;
+      font-size: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .note-item {
+        background: #050816;
+        border-color: rgba(148, 163, 184, 0.7);
+      }
+    }
+
+    .note-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .note-title {
+      font-weight: 500;
+    }
+
+    .note-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      font-size: 0.72rem;
+    }
+
+    .note-tag {
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(126, 227, 195, 0.2);
+      color: var(--accent-strong);
+    }
+
+    .note-meta {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .note-delete {
+      border-radius: 999px;
+      border: none;
+      padding: 3px 7px;
+      font-size: 0.72rem;
+      background: rgba(239, 68, 68, 0.12);
+      color: #b91c1c;
+      cursor: pointer;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .note-tag {
+        background: rgba(15, 118, 110, 0.6);
+        color: #e0fff7;
+      }
+      .note-delete {
+        background: rgba(239, 68, 68, 0.2);
+        color: #fecaca;
+      }
+    }
+
+    .note-empty {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* Countdown box */
+    .count-box {
+      border-radius: 18px;
+      padding: 10px 12px;
+      background: rgba(15, 23, 42, 0.02);
+      border: 1px dashed rgba(148, 163, 184, 0.5);
+      font-size: 0.8rem;
+      margin-top: 4px;
+    } 
+    .lesson-progress-track {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.25);
+  overflow: hidden;
+}
+
+.lesson-progress-bar {
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: width 0.25s ease-out;
+}
+
+.lesson-progress-meta {
+  margin-top: 4px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+    @media (prefers-color-scheme: dark) {
+      .count-box {
+        background: rgba(15, 23, 42, 0.8);
+      }
+    }
+
+    .count-main {
+      font-weight: 500;
+    }
+
+    /* Breaks editor */
+    .breaks-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .breaks-row {
+      display: grid;
+      grid-template-columns: 1.4fr repeat(4, 1fr);
+      gap: 6px;
+      align-items: center;
+    }
+    .breaks-head {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .breaks-row input {
+      width: 100%;
+    }
+
+    /* Pause slots */
+    .pause-cell {
+      background: color-mix(in srgb, var(--accent) 18%, transparent);
+      color: var(--accent-strong);
+      font-weight: 600;
+    }
+    .pause-cell .slot-meta {
+      color: var(--accent-strong);
+    }
+
+    /* Settings modal */
+    .modal-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 60;
+      padding: 16px;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 640px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow-soft);
+      padding: 16px 16px 12px;
+      position: relative;
+      animation: popupIn 140ms ease-out;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .modal-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      border: none;
+      background: transparent;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    /* Settings action card */
+    .settings-action-card {
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      align-self: flex-start; /* evita stretch del grid */
+    }
+   
+    .settings-action-title {
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .settings-action-sub {
+      font-size: 0.72rem;
+      line-height: 1.3;
+      color: var(--muted);
+    }
+    .settings-action-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .settings-reset {
+      padding: 4px 8px;
+      font-size: 0.75rem;
+      border-style: dashed;
+    }
+    @media (max-width: 640px) {
+      .settings-action-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        padding: 10px 12px;
+      }
+      .settings-action-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+      .settings-action-sub {
+        display: none;
+      }
+    }
+
+    .footer-bar {
+      margin-top: 4px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Tutorial overlay */
+    .tutorial-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .tutorial-box {
+      max-width: 360px;
+      background: var(--card);
+      border-radius: 20px;
+      padding: 16px 16px 14px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .tutorial-box h2 {
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+    }
+
+    .tutorial-box p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+      line-height: 1.45;
+    }
+
+    .tutorial-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+  /* ======================
+   SETTINGS BANNER COMPACT
+   ====================== */
+
+/* Rende la card “Orario • impostazioni” un banner compatto */
+.card.settings-action-card{
+  padding: 10px 12px !important;
+  min-height: unset !important;
+  height: auto !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+
+  /* meno “rettangolone” */
+  box-shadow: none !important;
+}
+
+/* Testi più compatti */
+.settings-action-title{
+  font-size: 0.82rem !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+  margin: 0 !important;
+}
+
+.settings-action-sub{
+  font-size: 0.78rem !important;
+  line-height: 1.25;
+  color: var(--muted);
+  opacity: 0.85;
+  margin: 0 !important;
+}
+
+/* Bottoni a destra compatti */
+.settings-action-actions{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+/* Mobile: va a capo ma resta compatto */
+@media (max-width: 640px){
+  .card.settings-action-card{
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+  }
+  .settings-action-actions{
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+.app-shell{ gap: 10px; max-width: 1400px; }
+.grid{ column-gap: 16px; row-gap: 10px; }
+.card.settings-action-card{ width: 100%; }
+.grid.grid-single{
+  grid-template-columns: 1fr !important;
+}
+  </style>
+</head>
+<body> 
+  <div class="card" style="margin-bottom:8px;">
+  <div class="card-header">
+    <div class="card-title">Account</div>
+    <span id="loginStatus" style="font-size:0.8rem;color:var(--muted);">
+      Non sei loggato
+    </span>
+  </div>
+  <div class="form-row">
+    <div>
+      <label>Email</label>
+      <input id="loginEmail" type="email" placeholder="you@example.com" />
+    </div>
+    <div>
+      <label>Password</label>
+      <input id="loginPassword" type="password" placeholder="••••••••" />
+    </div>
+    <div style="display:flex;align-items:flex-end;gap:6px;flex-wrap:wrap;">
+      <button class="btn" id="loginBtn">Login / Sign up</button>
+      <button class="btn-ghost" id="logoutBtn">Logout</button>
+    </div>
+  </div>
+</div>
+
+  <!-- Tutorial -->
+  <div class="tutorial-bg" id="tutorialBg">
+    <div class="tutorial-box">
+      <h2>Benvenuto su DeimosSked</h2>
+      <p>
+        1. Imposta classe, liceo e anno.<br />
+        2. Scegli ora di inizio, durata delle ore e intervalli.<br />
+        3. Clicca sulle celle per inserire materie e note.<br />
+        4. Aggiungi verifiche con data per avere i countdown.
+      </p>
+      <div class="tutorial-actions">
+        <button class="btn" id="tutorialOk">Ok, ci sono</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup editor slot -->
+  <div class="popup-bg" id="popupBg">
+    <div class="popup">
+      <div class="popup-header">
+        <div class="popup-title" id="popupTitle">Modifica ora</div>
+        <button class="popup-close" id="popupClose" aria-label="Chiudi">✕</button>
+      </div>
+      <label>Materia</label>
+      <input id="popupMateria" placeholder="Es: Matematica, Italiano..." />
+
+      <label>Note (opzionale)</label>
+      <input id="popupNote" placeholder="Es: verifica, interrogazione..." />
+
+      <div class="popup-actions">
+        <button class="popup-secondary" id="popupClear">Svuota ora</button>
+        <button class="btn" id="popupSave">Salva</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-shell">
+    <!-- Top bar -->
+    <header class="top-bar">
+      <div class="top-title">
+        <h1>DeimosSked</h1>
+        <div class="top-sub" id="classLabel">
+          Classe · Liceo · Anno scolastico
+        </div>
+      </div>
+      <div class="pill">
+        <span class="pill-dot"></span>
+        <span id="todayInfo">Oggi</span>
+      </div>
+    </header>
+
+    <!-- Settings row -->
+    <section class="grid grid-single">
+      <div class="card settings-action-card">
+        <div>
+          <div class="settings-action-title">Orario • impostazioni</div>
+          <div class="settings-action-sub">Configura classe, orari e pause.</div>
+        </div>
+        <div class="settings-action-actions">
+          <button class="btn" id="openSettingsModal">⚙️ Apri impostazioni</button>
+          <button class="btn-ghost settings-reset" id="resetAll">Reset dati</button>
+        </div>
+      </div>
+
+      <!-- Right: countdown & info -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Fine scuola &amp; info</div>
+          <span style="font-size:0.78rem;color:var(--muted);">
+            Set una volta, resta salvato.
+          </span>
+        </div>
+
+        <div class="card-main-title">Fine anno scolastico</div>
+        <label>Data fine scuola</label>
+        <input id="fineScuolaInput" type="date" />
+
+        <div class="count-box" id="fineScuolaBox" style="margin-top:8px;">
+          <div class="count-main" id="fineScuolaText">
+            Mancano — giorni alla fine della scuola.
+          </div>
+          <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">
+            Il conteggio passa automaticamente all’anno scolastico successivo
+            quando la data è superata.
+          </div>
+        </div> 
+        <div class="card-main-title" style="margin-top:12px;">
+  Lezione in corso
+</div>
+<div class="count-box" id="lessonProgressBox">
+  <div class="count-main" id="lessonProgressText">
+    Nessuna lezione in corso.
+  </div>
+  <div style="margin-top:6px;">
+    <div class="lesson-progress-track">
+      <div class="lesson-progress-bar" id="lessonProgressBar"></div>
+    </div>
+    <div class="lesson-progress-meta" id="lessonProgressMeta">
+      —
+    </div>
+  </div>
+</div>
+
+        <div class="card-main-title" style="margin-top:12px;">
+          Stato locale
+        </div>
+        <div class="count-box">
+          <div style="font-size:0.78rem;color:var(--muted);" id="storageInfo">
+            Dati salvati in locale.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Schedule + notes -->
+    <section class="grid">
+      <!-- Left: timetable -->
+      <div class="card">
+        <div class="card-header">
+  <div class="card-title">Orario settimanale</div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    <button class="btn-ghost" id="importScheduleBtn">Importa da foto</button>
+    <button class="btn-ghost" id="clearSchedule">Svuota orario</button>
+  </div>
+</div>
+
+<input id="scheduleImageInput" type="file" accept="image/*" style="display:none;" />
+
+        <div class="schedule-wrapper" id="scheduleWrapper"></div>
+      </div>
+
+      <!-- Right: notes -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Appunti / verifiche</div>
+          <span
+            id="notesCount"
+            style="font-size:0.8rem;color:var(--muted);"
+          ></span>
+        </div>
+
+        <div class="card-main-title">Nuovo appunto</div>
+        <div class="form-row">
+          <div>
+            <label>Materia / titolo</label>
+            <input id="notaTitolo" placeholder="Es: Verifica Matematica" />
+          </div>
+          <div>
+            <label>Giorno</label>
+            <select id="notaGiorno">
+              <option value="">---</option>
+              <option value="0">Lunedì</option>
+              <option value="1">Martedì</option>
+              <option value="2">Mercoledì</option>
+              <option value="3">Giovedì</option>
+              <option value="4">Venerdì</option>
+              <option value="5">Sabato</option>
+            </select>
+          </div>
+          <div>
+            <label>Data</label>
+            <input id="notaData" type="date" />
+          </div>
+        </div>
+        <label>Dettagli</label>
+        <textarea
+          id="notaDettagli"
+          placeholder="Capitoli, argomenti, cosa portare..."
+        ></textarea>
+        <div style="margin-top:6px;">
+          <button class="btn" id="addNota">Aggiungi appunto</button>
+        </div>
+
+        <div class="notes-list" id="notesList"></div>
+        <div class="note-empty" id="notesEmpty">
+          Nessun appunto ancora. Inizia aggiungendone uno sopra.
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer-bar">
+      <span>
+        DeimosSked · dati salvati in questo browser. Puoi aggiungerlo alla
+        Home su iPhone per usarlo come app.
+      </span>
+      <span id="footerTime"></span>
+    </footer>
+  </div>
+
+  <!-- Settings modal -->
+  <div class="modal-bg" id="settingsModalBg">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <div class="modal-title">Impostazioni orario</div>
+        <button class="modal-close" id="settingsModalClose" aria-label="Chiudi">✕</button>
+      </div>
+
+      <div class="card-main-title">Dati classe</div>
+      <div class="form-row">
+        <div>
+          <label>Classe</label>
+          <input id="classeInputModal" placeholder="Es: 3A, 5B..." />
+        </div>
+        <div>
+          <label>Liceo / scuola</label>
+          <input id="scuolaInputModal" placeholder="Es: Liceo Scientifico, Classico..." />
+        </div>
+        <div>
+          <label>Anno (es: 3° liceo)</label>
+          <input id="annoInputModal" placeholder="Es: 3° liceo" />
+        </div>
+      </div>
+
+      <div class="card-main-title" style="margin-top:8px;">Orario giornaliero</div>
+      <div class="form-row">
+        <div>
+          <label>Ora di inizio</label>
+          <input id="oraInizioModal" type="time" />
+        </div>
+        <div>
+          <label>Durata ora (minuti)</label>
+          <input id="durataModal" type="number" min="20" />
+        </div>
+        <div>
+          <label>Numero ore al giorno</label>
+          <input id="numOreModal" type="number" min="1" max="12" />
+        </div>
+      </div>
+
+      <div class="card-main-title" style="margin-top:8px;">Tema colore</div>
+      <div class="form-row">
+        <div>
+          <label>Tema</label>
+          <select id="themeSelectModal">
+            <option value="mint">Mint</option>
+            <option value="sky">Sky</option>
+            <option value="lavender">Lavender</option>
+            <option value="sunset">Sunset</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card-main-title" style="margin-top:8px;">Pause per giorno</div>
+      <div class="breaks-grid" id="breaksGrid">
+        <div class="breaks-row breaks-head">
+          <span>Giorno</span>
+          <span>Intervallo da</span>
+          <span>Intervallo a</span>
+          <span>Pausa pranzo da</span>
+          <span>Pausa pranzo a</span>
+        </div>
+        <!-- righe generate da JS -->
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-ghost" id="settingsCancel">Annulla</button>
+        <button class="btn" id="settingsSave">Salva</button>
+      </div>
+    </div>
+  </div>
+
+ <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script type="module">
+  // Import Firebase
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import {
+    getAuth,
+    onAuthStateChanged,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+  } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+ import { 
+    getFirestore, 
+    doc, 
+    getDoc, 
+    setDoc 
+  } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyDrpEyDbDEet_Mv6t7rmgKKiP_W-1Q3aDc",
+    authDomain: "deimossked.firebaseapp.com",
+    projectId: "deimossked",
+    storageBucket: "deimossked.firebasestorage.app",
+    messagingSenderId: "373296948870",
+    appId: "1:373296948870:web:9eb9d25989a07c0bf09307",
+    measurementId: "G-WJGB7KLVW1"
+  };
+  import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-functions.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-storage.js";
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const functions = getFunctions(app);
+  const storage = getStorage(app);
+
+
+
+async function loadUserData(uid) {
+  const ref = doc(db, "users", uid);
+  const snap = await getDoc(ref);
+
+  if (!snap.exists()) {
+    console.log("Utente nuovo: nessun dato salvato.");
+    return;
+  }
+
+  const data = snap.data();
+
+  scheduleData = data.scheduleData || {};
+  if (data.settings) {
+    settings = {
+      ...settings,
+      ...data.settings,
+      dayBreaks: {
+        ...defaultDayBreaks(),
+        ...(data.settings.dayBreaks ||
+          migrateLegacyBreaks(data.settings, data.settings.breaks)),
+      },
+    };
+  }
+  classInfo = data.classInfo || classInfo;
+  notesData = data.notesData || [];
+
+  syncClassUI();
+  syncSettingsUI();
+  populateSettingsModal();
+  renderNotes();
+  buildScheduleTable();
+  applyTheme(settings.theme || "mint");
+
+
+  console.log("Dati cloud caricati");
+} 
+async function saveUserData(uid) {
+  if (!uid) return;
+
+  const ref = doc(db, "users", uid);
+
+  const dataToSave = {
+    scheduleData,
+    settings,
+    classInfo,
+    notesData,
+  };
+
+  try {
+    await setDoc(ref, dataToSave, { merge: true });
+    console.log("Dati cloud salvati");
+  } catch (err) {
+    console.error("Errore salvataggio cloud:", err);
+  }
+}
+
+function saveIfLoggedIn() {
+  if (!currentUser) return;
+  saveUserData(currentUser.uid);
+} 
+    // ======================
+    // Utility data/tempo
+    // ======================
+    function formatToday() {
+      const now = new Date();
+      const giorni = [
+        "Domenica",
+        "Lunedì",
+        "Martedì",
+        "Mercoledì",
+        "Giovedì",
+        "Venerdì",
+        "Sabato",
+      ];
+      const d = String(now.getDate()).padStart(2, "0");
+      const m = String(now.getMonth() + 1).padStart(2, "0");
+      const y = now.getFullYear();
+      return `${giorni[now.getDay()]} · ${d}/${m}/${y}`;
+    }
+
+    document.getElementById("todayInfo").textContent = formatToday();
+
+    function updateFooterTime() {
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, "0");
+      const mm = String(now.getMinutes()).padStart(2, "0");
+      document.getElementById(
+        "footerTime"
+      ).textContent = `Ultimo aggiornamento: ${hh}:${mm}`;
+    }
+    updateFooterTime();
+
+    // utility tempo
+    function parseTime(str) {
+      if (!str || typeof str !== "string") return null;
+      const [h, m] = str.split(":").map((x) => parseInt(x, 10));
+      if (Number.isNaN(h) || Number.isNaN(m)) return null;
+      return h * 60 + m;
+    }
+
+    function formatTime(min) {
+      if (min == null || Number.isNaN(min)) return "";
+      const h = Math.floor(min / 60) % 24;
+      const m = min % 60;
+      return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+    }
+
+    function overlaps(aStart, aEnd, bStart, bEnd) {
+      return aStart < bEnd && bStart < aEnd;
+    }
+
+    // ======================
+    // LocalStorage keys
+    // ======================
+    const KEY_CLASS = "deimosked_classinfo_v1";
+    const KEY_SCHEDULE = "deimosked_schedule_v1";
+    const KEY_SETTINGS = "deimosked_settings_v1";
+    const KEY_NOTES = "deimosked_notes_v1";
+    const KEY_TUTORIAL = "deimosked_tutorial_done_v1";
+
+    // ======================
+    // Stato in memoria
+    // ======================
+    let scheduleData = {};
+    let notesData = [];
+    const defaultDayBreaks = () => ({
+      0: { breakStart: "", breakEnd: "", lunchStart: "", lunchEnd: "" },
+      1: { breakStart: "", breakEnd: "", lunchStart: "", lunchEnd: "" },
+      2: { breakStart: "", breakEnd: "", lunchStart: "", lunchEnd: "" },
+      3: { breakStart: "", breakEnd: "", lunchStart: "", lunchEnd: "" },
+      4: { breakStart: "", breakEnd: "", lunchStart: "", lunchEnd: "" },
+      5: { breakStart: "", breakEnd: "", lunchStart: "", lunchEnd: "" },
+    });
+    // ======================
+// OCR → ORARIO
+// ======================
+
+// raggruppa elementi per coordinata Y (righe)
+function clusterByY(items, tolerance = 8) {
+  const rows = [];
+  items.forEach(it => {
+    let row = rows.find(r => Math.abs(r.y - it.y) < tolerance);
+    if (!row) {
+      row = { y: it.y, items: [] };
+      rows.push(row);
+    }
+    row.items.push(it);
+  });
+  return rows.sort((a, b) => a.y - b.y);
+}
+
+// raggruppa elementi per coordinata X (colonne)
+function clusterByX(items, tolerance = 15) {
+  const cols = [];
+  items.forEach(it => {
+    let col = cols.find(c => Math.abs(c.x - it.x) < tolerance);
+    if (!col) {
+      col = { x: it.x, items: [] };
+      cols.push(col);
+    }
+    col.items.push(it);
+  });
+  return cols.sort((a, b) => a.x - b.x);
+}
+
+// normalizza nome materia
+function normalizeSubject(text) {
+  if (!text) return "";
+  const t = text.toLowerCase();
+
+  if (t.includes("mate")) return "Matematica";
+  if (t.includes("fisic")) return "Fisica";
+  if (t.includes("scienze")) return "Scienze Naturali";
+  if (t.includes("letter")) return "Lettere";
+  if (t.includes("ingles")) return "Inglese";
+  if (t.includes("filos")) return "Filosofia e Storia";
+  if (t.includes("storia")) return "Filosofia e Storia";
+  if (t.includes("diritto")) return "Diritto ed econ dello sport";
+  if (t.includes("sport")) return "Discipline sportive";
+  if (t.includes("relig")) return "Religione cattolica";
+  if (t.includes("civic")) return "Educazione civica";
+  if (t.includes("motor")) return "Scienze motorie e sportive";
+
+  return text.trim();
+}
+
+// applica OCR all'orario
+function applyScheduleFromOcrItems(items) {
+  if (!items || !items.length) {
+    alert("OCR vuoto.");
+    return;
+  }
+
+  // filtra solo parole utili (niente aule / sedi / numeri)
+  const filtered = items.filter(it => {
+    const t = it.t.toLowerCase();
+    if (!t) return false;
+    if (t.includes("aula")) return false;
+    if (t.includes("sede")) return false;
+    if (t.match(/^\d/)) return false;
+    if (t.length < 3) return false;
+    return true;
+  });
+
+  // raggruppa per righe
+  const rows = clusterByY(filtered);
+
+  // prima riga con giorni
+  const headerRow = rows.find(r =>
+    r.items.some(i => ["lun", "mar", "mer", "gio", "ven", "sab"].includes(i.t.toLowerCase()))
+  );
+
+  if (!headerRow) {
+    alert("Non trovo i giorni della settimana.");
+    return;
+  }
+
+  const dayCols = clusterByX(headerRow.items);
+  const dayX = dayCols.map(c => c.x);
+
+  const dayMap = {
+    0: "LUN",
+    1: "MAR",
+    2: "MER",
+    3: "GIO",
+    4: "VEN",
+    5: "SAB",
+  };
+
+  scheduleData = {};
+
+  let hourIndex = 0;
+
+  rows.forEach(row => {
+    if (row === headerRow) return;
+
+    const cols = clusterByX(row.items);
+
+    cols.forEach((col, idx) => {
+      if (idx === 0) return; // prima colonna = orari
+
+      const subjectText = col.items.map(i => i.t).join(" ");
+      const subject = normalizeSubject(subjectText);
+      if (!subject) return;
+
+      const dayIndex = idx - 1;
+      if (dayIndex < 0 || dayIndex > 5) return;
+
+      const key = `${dayIndex}-${hourIndex}`;
+      scheduleData[key] = { materia: subject, note: "" };
+    });
+
+    hourIndex++;
+  });
+
+  localStorage.setItem("deimosked_schedule_v1", JSON.stringify(scheduleData));
+  buildScheduleTable();
+  updateStorageInfo();
+  updateFooterTime();
+
+  alert("Orario importato dall'immagine.");
+}
+
+    function migrateLegacyBreaks(baseSettings, legacyBreaks) {
+      const result = defaultDayBreaks();
+      const startMin = parseTime(baseSettings.start || "08:00") || 0;
+      const durata = baseSettings.durata || 46;
+      const rows = baseSettings.numOre || 7;
+
+      for (let d = 0; d <= 5; d++) {
+        const legacy =
+          legacyBreaks?.[d] || {
+            intervalloAfter: baseSettings.intervalloIndex || 0,
+            pranzoAfter: baseSettings.pranzoIndex || 0,
+            intervalloMin: 10,
+            pranzoMin: 60,
+          };
+
+        let cursor = startMin;
+        let breakStart = "";
+        let breakEnd = "";
+        let lunchStart = "";
+        let lunchEnd = "";
+
+        for (let i = 1; i <= rows; i++) {
+          cursor += durata;
+          if (i === legacy.intervalloAfter && legacy.intervalloAfter > 0) {
+            breakStart = formatTime(cursor);
+            cursor += legacy.intervalloMin || 10;
+            breakEnd = formatTime(cursor);
+          }
+          if (i === legacy.pranzoAfter && legacy.pranzoAfter > 0) {
+            lunchStart = formatTime(cursor);
+            cursor += legacy.pranzoMin || 60;
+            lunchEnd = formatTime(cursor);
+          }
+        }
+
+        result[d] = {
+          breakStart,
+          breakEnd,
+          lunchStart,
+          lunchEnd,
+        };
+      }
+      return result;
+    }
+
+    let settings = {
+      start: "08:00",
+      durata: 46,
+      numOre: 7,
+      fineScuola: null,
+      theme: "mint",
+      dayBreaks: defaultDayBreaks(),
+    };
+    let classInfo = {
+      classe: "",
+      scuola: "",
+      anno: "",
+    };
+    const DAYS = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+    const THEME_CONFIGS = {
+  mint: {
+    accent: "#7ee3c3",
+    accentStrong: "#0f766e",
+  },
+  sky: {
+    accent: "#7dd3fc",
+    accentStrong: "#0369a1",
+  },
+  lavender: {
+    accent: "#c4b5fd",
+    accentStrong: "#6d28d9",
+  },
+  sunset: {
+    accent: "#fdba74",
+    accentStrong: "#c2410c",
+  },
+};
+
+function applyTheme(themeName) {
+  const theme = THEME_CONFIGS[themeName] || THEME_CONFIGS.mint;
+  const root = document.documentElement;
+
+  root.style.setProperty("--accent", theme.accent);
+  root.style.setProperty("--accent-strong", theme.accentStrong);
+}
+
+
+    // ======================
+    // Tutorial
+    // ======================
+    const tutorialBg = document.getElementById("tutorialBg");
+    const tutorialOk = document.getElementById("tutorialOk");
+    if (!localStorage.getItem(KEY_TUTORIAL)) {
+      tutorialBg.style.display = "flex";
+    }
+    tutorialOk.addEventListener("click", () => {
+      tutorialBg.style.display = "none";
+      localStorage.setItem(KEY_TUTORIAL, "1");
+    });
+
+    // ======================
+    // Caricamento dati
+    // ======================
+    function loadData() {
+      try {
+        const s = localStorage.getItem(KEY_SCHEDULE);
+        if (s) scheduleData = JSON.parse(s);
+      } catch {
+        scheduleData = {};
+      }
+      try {
+        const n = localStorage.getItem(KEY_NOTES);
+        if (n) notesData = JSON.parse(n);
+      } catch {
+        notesData = [];
+      }
+      try {
+        const st = localStorage.getItem(KEY_SETTINGS);
+        if (st) {
+          const parsed = JSON.parse(st);
+          settings = {
+            ...settings,
+            ...parsed,
+            dayBreaks: {
+              ...defaultDayBreaks(),
+              ...(parsed.dayBreaks || migrateLegacyBreaks(parsed, parsed.breaks)),
+            },
+          };
+        }
+      } catch {
+        /* ignore */
+      }
+      try {
+        const ci = localStorage.getItem(KEY_CLASS);
+        if (ci) classInfo = { ...classInfo, ...JSON.parse(ci) };
+      } catch {
+        /* ignore */
+      }
+    }
+
+    loadData();
+    applyTheme(settings.theme || "mint");
+    // ======================
+    // Aggiorna UI con dati
+    // ======================
+    const classLabel = document.getElementById("classLabel");
+    const lessonProgressText = document.getElementById("lessonProgressText");
+    const lessonProgressMeta = document.getElementById("lessonProgressMeta");
+    const lessonProgressBar = document.getElementById("lessonProgressBar");
+    const fineScuolaInput = document.getElementById("fineScuolaInput");
+
+    // modal elements
+    const modalBg = document.getElementById("settingsModalBg");
+    const modalClose = document.getElementById("settingsModalClose");
+    const modalOpenBtn = document.getElementById("openSettingsModal");
+    const modalCancel = document.getElementById("settingsCancel");
+    const modalSave = document.getElementById("settingsSave");
+    const breaksGrid = document.getElementById("breaksGrid");
+
+    const classeInputModal = document.getElementById("classeInputModal");
+    const scuolaInputModal = document.getElementById("scuolaInputModal");
+    const annoInputModal = document.getElementById("annoInputModal");
+    const oraInizioModal = document.getElementById("oraInizioModal");
+    const durataModal = document.getElementById("durataModal");
+    const numOreModal = document.getElementById("numOreModal");
+    const themeSelectModal = document.getElementById("themeSelectModal");
+
+    function renderBreaksGrid() {
+      // remove old rows except header
+      breaksGrid.querySelectorAll(".breaks-row:not(.breaks-head)").forEach((row) =>
+        row.remove()
+      );
+      DAYS.forEach((day, idx) => {
+        const row = document.createElement("div");
+        row.className = "breaks-row";
+        row.innerHTML = `
+          <span>${day}</span>
+          <input class="break-start" data-day="${idx}" type="time" />
+          <input class="break-end" data-day="${idx}" type="time" />
+          <input class="lunch-start" data-day="${idx}" type="time" />
+          <input class="lunch-end" data-day="${idx}" type="time" />
+        `;
+        breaksGrid.appendChild(row);
+      });
+    }
+    function syncClassUI() {
+      const c = classInfo.classe || "Classe";
+      const s = classInfo.scuola || "Scuola";
+      const a = classInfo.anno || "Anno scolastico";
+      classLabel.textContent = `${c} · ${s} · ${a}`;
+    }
+
+    syncClassUI();
+
+    function syncSettingsUI() {
+      if (settings.fineScuola) {
+        fineScuolaInput.value = settings.fineScuola;
+      } else {
+        // default: 10 giugno anno corrente
+        const now = new Date();
+        const year = now.getFullYear();
+        fineScuolaInput.value = `${year}-06-10`;
+        settings.fineScuola = fineScuolaInput.value;
+      } 
+
+    }
+
+    syncSettingsUI();
+    renderBreaksGrid();
+    populateSettingsModal();
+
+    function populateSettingsModal() {
+      classeInputModal.value = classInfo.classe || "";
+      scuolaInputModal.value = classInfo.scuola || "";
+      annoInputModal.value = classInfo.anno || "";
+      oraInizioModal.value = settings.start || "08:00";
+      durataModal.value = settings.durata || 46;
+      numOreModal.value = settings.numOre || 7;
+      themeSelectModal.value = settings.theme || "mint";
+
+      const dayBreaks = settings.dayBreaks || defaultDayBreaks();
+      document.querySelectorAll(".break-start").forEach((el) => {
+        const day = el.dataset.day;
+        el.value = dayBreaks?.[day]?.breakStart || "";
+      });
+      document.querySelectorAll(".break-end").forEach((el) => {
+        const day = el.dataset.day;
+        el.value = dayBreaks?.[day]?.breakEnd || "";
+      });
+      document.querySelectorAll(".lunch-start").forEach((el) => {
+        const day = el.dataset.day;
+        el.value = dayBreaks?.[day]?.lunchStart || "";
+      });
+      document.querySelectorAll(".lunch-end").forEach((el) => {
+        const day = el.dataset.day;
+        el.value = dayBreaks?.[day]?.lunchEnd || "";
+      });
+    }
+
+    // ======================
+    // Salvataggi
+    // ======================
+    function openSettingsModal() {
+      populateSettingsModal();
+      modalBg.style.display = "flex";
+    }
+
+    function closeSettingsModal() {
+      modalBg.style.display = "none";
+    }
+
+    modalOpenBtn.addEventListener("click", openSettingsModal);
+    modalClose.addEventListener("click", closeSettingsModal);
+    modalCancel.addEventListener("click", closeSettingsModal);
+    modalBg.addEventListener("click", (e) => {
+      if (e.target === modalBg) closeSettingsModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeSettingsModal();
+    });
+
+    function saveSettings() {
+      const startVal = oraInizioModal.value || "08:00";
+      const durataVal = parseInt(durataModal.value || "46", 10);
+      const numOreVal = parseInt(numOreModal.value || "7", 10);
+
+      const newDayBreaks = defaultDayBreaks();
+      let hasError = false;
+
+      DAYS.forEach((_, dayIdx) => {
+        const bStart = document.querySelector(`.break-start[data-day="${dayIdx}"]`)?.value || "";
+        const bEnd = document.querySelector(`.break-end[data-day="${dayIdx}"]`)?.value || "";
+        const lStart = document.querySelector(`.lunch-start[data-day="${dayIdx}"]`)?.value || "";
+        const lEnd = document.querySelector(`.lunch-end[data-day="${dayIdx}"]`)?.value || "";
+
+        const bStartMin = bStart ? parseTime(bStart) : null;
+        const bEndMin = bEnd ? parseTime(bEnd) : null;
+        const lStartMin = lStart ? parseTime(lStart) : null;
+        const lEndMin = lEnd ? parseTime(lEnd) : null;
+
+        if ((bStartMin != null || bEndMin != null) && (bStartMin == null || bEndMin == null || bStartMin >= bEndMin)) {
+          alert(`Intervallo non valido per ${DAYS[dayIdx]} (start/end).`);
+          hasError = true;
+          return;
+        }
+
+        if ((lStartMin != null || lEndMin != null) && (lStartMin == null || lEndMin == null || lStartMin >= lEndMin)) {
+          alert(`Pausa pranzo non valida per ${DAYS[dayIdx]} (start/end).`);
+          hasError = true;
+          return;
+        }
+
+        if (bStartMin != null && lStartMin != null && overlaps(bStartMin, bEndMin, lStartMin, lEndMin)) {
+          alert(`Sovrapposizione tra intervallo e pausa pranzo in ${DAYS[dayIdx]}.`);
+          hasError = true;
+          return;
+        }
+
+        newDayBreaks[dayIdx] = {
+          breakStart: bStart,
+          breakEnd: bEnd,
+          lunchStart: lStart,
+          lunchEnd: lEnd,
+        };
+      });
+
+      if (hasError) return;
+
+      classInfo = {
+        classe: classeInputModal.value.trim(),
+        scuola: scuolaInputModal.value.trim(),
+        anno: annoInputModal.value.trim(),
+      };
+
+      settings = {
+        ...settings,
+        start: startVal,
+        durata: durataVal,
+        numOre: numOreVal,
+        fineScuola: fineScuolaInput.value || settings.fineScuola,
+        theme: themeSelectModal.value || settings.theme,
+        dayBreaks: newDayBreaks,
+      };
+
+      localStorage.setItem(KEY_CLASS, JSON.stringify(classInfo));
+      localStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
+
+      applyTheme(settings.theme);
+      syncClassUI();
+      buildScheduleTable();
+      updateStorageInfo();
+      updateFooterTime();
+      updateLessonProgress();
+      saveIfLoggedIn();
+      closeSettingsModal();
+    }
+
+    function saveFineScuola() {
+      settings = {
+        ...settings,
+        fineScuola: fineScuolaInput.value || settings.fineScuola,
+      };
+      localStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
+      updateStorageInfo();
+      updateFooterTime();
+      saveIfLoggedIn();
+    }
+
+    modalSave.addEventListener("click", saveSettings);
+
+    fineScuolaInput.addEventListener("change", () => {
+      saveFineScuola();
+      updateFineScuolaCountdown();
+    });
+    // ======================
+    // Storage info
+    // ======================
+    function updateStorageInfo() {
+      const s = (localStorage.getItem(KEY_SCHEDULE) || "").length;
+      const n = (localStorage.getItem(KEY_NOTES) || "").length;
+      const st = (localStorage.getItem(KEY_SETTINGS) || "").length;
+      const c = (localStorage.getItem(KEY_CLASS) || "").length;
+      const total = s + n + st + c;
+      document.getElementById(
+        "storageInfo"
+      ).textContent = `Circa ${total} byte di dati salvati in localStorage.`;
+    }
+
+    updateStorageInfo();
+
+    // ======================
+    // Orario settimanale
+    // ======================
+    const scheduleWrapper = document.getElementById("scheduleWrapper");
+    const importScheduleBtn = document.getElementById("importScheduleBtn");
+    const scheduleImageInput = document.getElementById("scheduleImageInput");
+
+    function buildDayTimeline(dayIndex) {
+      const durata = settings.durata || 46;
+      const rows = settings.numOre || 7;
+      const startMinutes = parseTime(settings.start || "08:00") || 0;
+      const dayBreaks = settings.dayBreaks?.[dayIndex] || {};
+
+      const blocks = [];
+      const dayBreakList = [];
+      if (dayBreaks.breakStart && dayBreaks.breakEnd) {
+        const s = parseTime(dayBreaks.breakStart);
+        const e = parseTime(dayBreaks.breakEnd);
+        if (s != null && e != null && s < e) {
+          dayBreakList.push({ type: "break", start: s, end: e });
+        }
+      }
+      if (dayBreaks.lunchStart && dayBreaks.lunchEnd) {
+        const s = parseTime(dayBreaks.lunchStart);
+        const e = parseTime(dayBreaks.lunchEnd);
+        if (s != null && e != null && s < e) {
+          dayBreakList.push({ type: "pranzo", start: s, end: e });
+        }
+      }
+      dayBreakList.sort((a, b) => a.start - b.start);
+
+      let cursorMin = startMinutes;
+      let breakIdx = 0;
+      const toDate = (minutes) => {
+        const d = new Date();
+        d.setHours(0, 0, 0, 0);
+        d.setMinutes(minutes);
+        return d;
+      };
+
+      const pushSlot = (type, index, startMin, endMin) => {
+        blocks.push({ type, index, start: toDate(startMin), end: toDate(endMin) });
+      };
+
+      for (let i = 1; i <= rows; i++) {
+        while (breakIdx < dayBreakList.length && dayBreakList[breakIdx].start <= cursorMin) {
+          const br = dayBreakList[breakIdx];
+          pushSlot("break", br.type, br.start, br.end);
+          cursorMin = Math.max(cursorMin, br.end);
+          breakIdx++;
+        }
+
+        const nextBreak = dayBreakList[breakIdx];
+        if (nextBreak && nextBreak.start < cursorMin + durata) {
+          pushSlot("break", nextBreak.type, nextBreak.start, nextBreak.end);
+          cursorMin = Math.max(cursorMin, nextBreak.end);
+          breakIdx++;
+          i--;
+          continue;
+        }
+
+        const lessonStart = cursorMin;
+        const lessonEnd = cursorMin + durata;
+        pushSlot("lesson", i, lessonStart, lessonEnd);
+        cursorMin = lessonEnd;
+      }
+
+      while (breakIdx < dayBreakList.length) {
+        const br = dayBreakList[breakIdx];
+        pushSlot("break", br.type, br.start, br.end);
+        cursorMin = Math.max(cursorMin, br.end);
+        breakIdx++;
+      }
+
+      return blocks;
+    }
+
+
+    function updateLessonProgress() {
+      if (!lessonProgressText || !lessonProgressMeta || !lessonProgressBar) return;
+
+      const now = new Date();
+      const weekday = now.getDay(); // 0=Dom, 1=Lun, ...
+      const dayIndex = weekday - 1; // 0=Lunedì, ... 5=Sabato
+
+      if (dayIndex < 0 || dayIndex > 5) {
+        lessonProgressText.textContent = "Nessuna lezione in corso.";
+        lessonProgressMeta.textContent = "Oggi non hai lezioni.";
+        lessonProgressBar.style.width = "0%";
+        return;
+      }
+
+      const timeline = buildDayTimeline(dayIndex);
+      let current = null;
+
+      for (const slot of timeline) {
+        if (now >= slot.start && now < slot.end) {
+          current = slot;
+          break;
+        }
+      }
+
+      if (!current) {
+        lessonProgressText.textContent = "Nessuna lezione in corso.";
+        lessonProgressMeta.textContent = "Fuori orario scolastico.";
+        lessonProgressBar.style.width = "0%";
+        return;
+      }
+
+      const total = current.end - current.start;
+      const done = now - current.start;
+      const percent = Math.max(0, Math.min(100, (done / total) * 100));
+      const minutesLeft = Math.ceil((current.end - now) / 60000);
+
+      const next = timeline[timeline.indexOf(current) + 1];
+      let nextText = "Giornata finita.";
+      if (next) {
+        if (next.type === "break") {
+          const nName = next.index === "pranzo" ? "Pausa pranzo" : "Intervallo";
+          nextText = `Prossima: ${nName} alle ${next.start.toTimeString().slice(0, 5)}.`;
+        } else {
+          const key = `${dayIndex}-${(next.index || 1) - 1}`;
+          const nextSlot = scheduleData[key] || { materia: "" };
+          nextText = `Prossima: ${nextSlot.materia || "—"} alle ${next.start.toTimeString().slice(0, 5)}.`;
+        }
+      }
+
+      if (current.type === "break") {
+        const name = current.index === "pranzo" ? "Pausa pranzo" : "Intervallo";
+        lessonProgressText.textContent = `${name} in corso`;
+        lessonProgressMeta.textContent = `Mancano ${minutesLeft} min alla fine della pausa. ${nextText}`;
+      } else {
+        const key = `${dayIndex}-${(current.index || 1) - 1}`;
+        const slotData = scheduleData[key] || { materia: "" };
+        const materia = slotData.materia || "Ora libera";
+        lessonProgressText.textContent = `Lezione: ${materia} (ora ${current.index})`;
+        lessonProgressMeta.textContent = `Mancano ${minutesLeft} min. ${nextText}`;
+      }
+      lessonProgressBar.style.width = `${percent}%`;
+    }
+
+    function buildScheduleTable() {
+      const daysTimelines = DAYS.map((_, idx) => buildDayTimeline(idx));
+      const maxRows = Math.max(...daysTimelines.map((t) => t.length));
+      const labelTimeline =
+        daysTimelines.reduce((acc, tl) => (tl && tl.length > (acc?.length || 0) ? tl : acc), []) || [];
+      const formatDateToStr = (d) => formatTime(d.getHours() * 60 + d.getMinutes());
+
+      let html = `<table><thead><tr><th>Ora</th>`;
+      DAYS.forEach((d) => {
+        html += `<th>${d}</th>`;
+      });
+      html += `</tr></thead><tbody>`;
+
+      const now = new Date();
+      const todayIndex = now.getDay() - 1; // Lun=1 -> 0
+
+      for (let row = 0; row < maxRows; row++) {
+        const labelSlot = labelTimeline[row];
+        const label = labelSlot
+          ? `${formatDateToStr(labelSlot.start)}–${formatDateToStr(labelSlot.end)}`
+          : "";
+        html += `<tr><td>${label}</td>`;
+
+        for (let d = 0; d < DAYS.length; d++) {
+          const daySlot = daysTimelines[d][row];
+          if (!daySlot) {
+            html += `<td></td>`;
+            continue;
+          }
+
+          if (daySlot.type === "break") {
+            const name = daySlot.index === "pranzo" ? "Pausa pranzo" : "Intervallo";
+            html += `<td class="slot pause-cell">
+              <div class="slot-inner">
+                <div class="subject">${name}</div>
+                <div class="slot-meta">Ripresa: ${formatDateToStr(daySlot.end)}</div>
+              </div>
+            </td>`;
+            continue;
+          }
+
+          const key = `${d}-${(daySlot.index || 1) - 1}`;
+          const cell = scheduleData[key] || { materia: "", note: "" };
+          const materia = cell.materia || "";
+          const note = cell.note || "";
+          const empty = !materia;
+          const todayClass = d === todayIndex ? "slot-today" : "";
+          html += `<td class="slot ${todayClass}" data-key="${key}">
+            <div class="slot-inner">
+              <div class="subject ${empty ? "empty" : ""}">
+                ${materia || "—"}
+              </div>
+              ${
+                note
+                  ? `<div class="slot-meta">${note}</div>`
+                  : `<div class="slot-meta" style="opacity:0.3;">Clicca per modificare</div>`
+              }
+            </div>
+          </td>`;
+        }
+        html += `</tr>`;
+      }
+
+      html += `</tbody></table>`;
+      scheduleWrapper.innerHTML = html;
+
+      // attach click handlers
+      document.querySelectorAll("td.slot[data-key]").forEach((td) => {
+        td.addEventListener("click", () => {
+          const key = td.getAttribute("data-key");
+          openPopupForSlot(key);
+        });
+      });
+      updateLessonProgress();
+    }
+
+    buildScheduleTable();
+
+    document
+      .getElementById("clearSchedule")
+      .addEventListener("click", () => {
+        if (!confirm("Sicuro di voler svuotare tutto l’orario?")) return;
+        scheduleData = {};
+        localStorage.setItem(KEY_SCHEDULE, JSON.stringify(scheduleData));
+        buildScheduleTable();
+        updateStorageInfo();
+      });
+      importScheduleBtn.addEventListener("click", () => {
+  scheduleImageInput.click();
+});
+
+
+
+    // ======================
+    // Popup editor slot
+    // ======================
+    const popupBg = document.getElementById("popupBg");
+    const popupMateria = document.getElementById("popupMateria");
+    const popupNote = document.getElementById("popupNote");
+    const popupTitle = document.getElementById("popupTitle");
+    const popupSave = document.getElementById("popupSave");
+    const popupClear = document.getElementById("popupClear");
+    const popupClose = document.getElementById("popupClose");
+
+    let currentSlotKey = null;
+
+    function openPopupForSlot(key) {
+      currentSlotKey = key;
+      const val = scheduleData[key] || { materia: "", note: "" };
+      popupMateria.value = val.materia;
+      popupNote.value = val.note;
+      const [dayIndex, hourIndex] = key.split("-").map((x) => parseInt(x, 10));
+      popupTitle.textContent = `${DAYS[dayIndex]} · ora ${hourIndex + 1}`;
+      popupBg.style.display = "flex";
+    }
+
+    function closePopup() {
+      popupBg.style.display = "none";
+      currentSlotKey = null;
+    }
+
+    popupSave.addEventListener("click", () => {
+      if (!currentSlotKey) return;
+      scheduleData[currentSlotKey] = {
+        materia: popupMateria.value.trim(),
+        note: popupNote.value.trim(),
+      };
+      localStorage.setItem(KEY_SCHEDULE, JSON.stringify(scheduleData));
+      buildScheduleTable();
+      updateStorageInfo();
+      updateFooterTime();
+      updateLessonProgress();
+      saveIfLoggedIn();
+      closePopup();
+    });
+
+    popupClear.addEventListener("click", () => {
+      if (!currentSlotKey) return;
+      delete scheduleData[currentSlotKey];
+      localStorage.setItem(KEY_SCHEDULE, JSON.stringify(scheduleData));
+      buildScheduleTable();
+      updateStorageInfo();
+      updateFooterTime();
+      updateLessonProgress();
+      saveIfLoggedIn();
+      closePopup();
+    });
+
+    popupClose.addEventListener("click", closePopup);
+    popupBg.addEventListener("click", (e) => {
+      if (e.target === popupBg) closePopup();
+    });
+
+    // ======================
+    // Note / verifiche
+    // ======================
+    const notaTitolo = document.getElementById("notaTitolo");
+    const notaGiorno = document.getElementById("notaGiorno");
+    const notaData = document.getElementById("notaData");
+    const notaDettagli = document.getElementById("notaDettagli");
+    const notesList = document.getElementById("notesList");
+    const notesEmpty = document.getElementById("notesEmpty");
+    const notesCount = document.getElementById("notesCount");
+
+    function saveNotes() {
+      localStorage.setItem(KEY_NOTES, JSON.stringify(notesData));
+      updateStorageInfo();
+      updateFooterTime();
+    saveIfLoggedIn();
+    }
+
+    function renderNotes() {
+      notesList.innerHTML = "";
+      if (!notesData.length) {
+        notesEmpty.style.display = "block";
+        notesCount.textContent = "0 appunti";
+        return;
+      }
+      notesEmpty.style.display = "none";
+      notesCount.textContent = `${notesData.length} appunti`;
+
+      const sorted = [...notesData].sort((a, b) => {
+        if (a.data && b.data && a.data !== b.data) {
+          return a.data.localeCompare(b.data);
+        }
+        if (a.dayIndex !== b.dayIndex) return a.dayIndex - b.dayIndex;
+        return (a.createdAt || 0) - (b.createdAt || 0);
+      });
+
+      const now = new Date();
+
+      sorted.forEach((n, idx) => {
+        const item = document.createElement("div");
+        item.className = "note-item";
+
+        const top = document.createElement("div");
+        top.className = "note-top";
+
+        const title = document.createElement("div");
+        title.className = "note-title";
+        title.textContent = n.titolo || "Senza titolo";
+
+        const delBtn = document.createElement("button");
+        delBtn.className = "note-delete";
+        delBtn.textContent = "Elimina";
+        delBtn.addEventListener("click", () => {
+          notesData = notesData.filter((_, i) => i !== idx);
+          saveNotes();
+          renderNotes();
+        });
+
+        top.appendChild(title);
+        top.appendChild(delBtn);
+
+        const tags = document.createElement("div");
+        tags.className = "note-tags";
+
+        if (typeof n.dayIndex === "number") {
+          const t = document.createElement("span");
+          t.className = "note-tag";
+          t.textContent = DAYS[n.dayIndex];
+          tags.appendChild(t);
+        }
+
+        if (n.data) {
+          const t = document.createElement("span");
+          t.className = "note-tag";
+          t.textContent = n.data;
+          tags.appendChild(t);
+        }
+
+        const meta = document.createElement("div");
+        meta.className = "note-meta";
+        meta.textContent = n.dettagli || "";
+
+        const countdownDiv = document.createElement("div");
+        countdownDiv.className = "note-meta";
+        if (n.data) {
+          const d = new Date(n.data);
+          const diff = Math.ceil((d - now) / (1000 * 60 * 60 * 24));
+          if (!isNaN(diff)) {
+            if (diff > 0) {
+              countdownDiv.textContent = `Mancano ${diff} giorni.`;
+            } else if (diff === 0) {
+              countdownDiv.textContent = `È oggi.`;
+            } else {
+              countdownDiv.textContent = `Già passata.`;
+            }
+          }
+        }
+
+        item.appendChild(top);
+        if (tags.childElementCount) item.appendChild(tags);
+        if (meta.textContent) item.appendChild(meta);
+        if (countdownDiv.textContent) item.appendChild(countdownDiv);
+
+        notesList.appendChild(item);
+      });
+    }
+
+    renderNotes();
+
+    document.getElementById("addNota").addEventListener("click", () => {
+      const titolo = notaTitolo.value.trim();
+      const dettagli = notaDettagli.value.trim();
+      const giornoVal = notaGiorno.value;
+      const dataVal = notaData.value;
+
+      if (!titolo && !dettagli) return;
+
+      notesData.push({
+        titolo,
+        dettagli,
+        dayIndex: giornoVal === "" ? null : parseInt(giornoVal, 10),
+        data: dataVal || "",
+        createdAt: Date.now(),
+      });
+
+      notaTitolo.value = "";
+      notaDettagli.value = "";
+      notaGiorno.value = "";
+      notaData.value = "";
+
+      saveNotes();
+      renderNotes();
+    });
+
+    // ======================
+    // Fine scuola countdown
+    // ======================
+    function updateFineScuolaCountdown() {
+      const el = document.getElementById("fineScuolaText");
+      if (!settings.fineScuola) {
+        el.textContent = "Mancano — giorni alla fine della scuola.";
+        return;
+      } 
+      const now = new Date();
+      let end = new Date(settings.fineScuola);
+      if (isNaN(end.getTime())) {
+        el.textContent = "Data non valida.";
+        return;
+      }
+      // se la data è già passata, considera l'anno successivo
+      if (end < now) {
+        end.setFullYear(end.getFullYear() + 1);
+      }
+      const diff = Math.ceil((end - now) / (1000 * 60 * 60 * 24));
+      el.innerHTML = `Mancano <strong>${diff}</strong> giorni alla fine della scuola.`;
+    }
+
+    updateFineScuolaCountdown();
+    updateLessonProgress();
+    setInterval(updateLessonProgress, 60000); // aggiorna ogni minuto
+    // Manual test rapido:
+    // 1) Intervallo 10 min a metà mattina: imposta 10:20-10:30 e verifica tabella + barra.
+    // 2) Pausa pranzo lunga: imposta 13:00-13:50 e controlla next lesson dopo la pausa.
+    // 3) Giorni diversi: cambia orari di pausa per due giorni e verifica che la tabella mostri blocchi differenti.
+
+
+    // ======================
+    // Reset totale
+    // ======================
+    document.getElementById("resetAll").addEventListener("click", () => {
+      if (
+        !confirm(
+          "Vuoi davvero cancellare tutti i dati (orario, appunti, impostazioni)?"
+        )
+      )
+        return;
+      localStorage.removeItem(KEY_CLASS);
+      localStorage.removeItem(KEY_SCHEDULE);
+      localStorage.removeItem(KEY_SETTINGS);
+      localStorage.removeItem(KEY_NOTES);
+      scheduleData = {};
+      notesData = [];
+      settings = {
+        start: "08:00",
+        durata: 46,
+        numOre: 7,
+        fineScuola: null,
+        dayBreaks: defaultDayBreaks(),
+      };
+      classInfo = { classe: "", scuola: "", anno: "" };
+      syncClassUI();
+      syncSettingsUI();
+      buildScheduleTable();
+      renderNotes();
+      updateStorageInfo();
+      updateFineScuolaCountdown();
+      updateFooterTime();
+      saveIfLoggedIn(); 
+    });
+  // ===== LOGIN CON FIREBASE =====
+
+let currentUser = null;
+
+const loginEmailEl = document.getElementById("loginEmail");
+const loginPasswordEl = document.getElementById("loginPassword");
+const loginStatusEl = document.getElementById("loginStatus");
+const loginBtn = document.getElementById("loginBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+
+// click su Login / Sign up
+loginBtn.addEventListener("click", async () => {
+  const email = loginEmailEl.value.trim();
+  const password = loginPasswordEl.value.trim();
+
+  if (!email || !password) {
+    alert("Inserisci email e password.");
+    return;
+  }
+
+  try {
+    // prova prima a fare login
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    // se non esiste, crea l'account
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      alert("Account creato e login effettuato.");
+    } catch (err2) {
+      console.error(err2);
+      alert("Errore nel login/registrazione.");
+    }
+  }
+});
+
+// click su Logout
+logoutBtn.addEventListener("click", async () => {
+  try {
+    await signOut(auth);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// quando cambia lo stato (loggato/non loggato)
+onAuthStateChanged(auth, async (user) => {
+  currentUser = user || null;
+
+  if (currentUser) {
+    loginStatusEl.textContent = `Loggato come ${currentUser.email}`;
+
+    try {
+      await loadUserData(currentUser.uid);
+      updateStorageInfo();
+      updateFooterTime();
+    } catch (err) {
+      console.error("Errore nel caricamento dati utente:", err);
+    }
+  } else {
+    loginStatusEl.textContent = "Non sei loggato";
+  }
+const OCR_URL = "https://us-central1-deimossked.cloudfunctions.net/ocrImage";
+
+const scheduleImageInput = document.getElementById("scheduleImageInput");
+const importScheduleBtn = document.getElementById("importScheduleBtn"); // se esiste
+
+scheduleImageInput.addEventListener("change", async (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  try {
+    if (importScheduleBtn) {
+      importScheduleBtn.textContent = "Leggo immagine...";
+      importScheduleBtn.disabled = true;
+    }
+
+    // file → base64
+    const base64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+    const resp = await fetch(OCR_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ imageBase64: base64 })
+    });
+
+    const json = await resp.json();
+    console.log("OCR ITEMS sample:", (json.items || []).slice(0, 20));
+    try {
+  applyScheduleFromOcrItems(json.items || []);
+} catch (e) {
+  console.error("PARSER ERROR:", e);
+  alert("PARSER ERROR: " + (e?.message || e));
+}
+    if (!resp.ok) throw new Error(json?.error || "Errore OCR");
+
+    console.log("OCR TEXT:", json.text);
+    const lines = json.text
+  .split("\n")
+  .map(l => l.trim())
+  .filter(l => l.length > 0);
+
+   console.log("OCR LINES:", lines);
+   console.log("OCR ITEMS sample:", (json.items || []).slice(0, 20));
+
+    console.log("OCR LENGTH:", (json.text || "").length);
+
+  } catch (err) {
+    console.error(err);
+    alert("Errore OCR: " + (err?.message || err));
+  } finally {
+    if (importScheduleBtn) {
+      importScheduleBtn.textContent = "Importa da foto";
+      importScheduleBtn.disabled = false;
+    }
+    scheduleImageInput.value = "";
+  }
+});
+
+});
+
+</script>
+</body>
+</html>
